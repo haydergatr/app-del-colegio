@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Clase Épica — La clase que todos quieren jugar</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:#0d0f1a;color:#fff;
+    min-height:100vh;
+    background-image:radial-gradient(circle at 15% 0%,#3b1a5e33 0,transparent 45%),radial-gradient(circle at 85% 100%,#1a2b5e44 0,transparent 45%);
+  }
+  .barra{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;border-bottom:1px solid #ffffff14;
+    position:sticky;top:0;background:#0d0f1acc;backdrop-filter:blur(8px);z-index:20;
+  }
+  .logo{font-weight:900;font-size:18px;letter-spacing:.3px}
+  .logo b{background:linear-gradient(135deg,#ff4d8d,#a55bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .etiqueta-demo{font-size:11px;background:#ffffff14;padding:4px 10px;border-radius:99px;color:#cfd3ff}
+  .pantalla{display:none;padding:20px;max-width:520px;margin:0 auto}
+  .pantalla.activa{display:block}
+  .saludo{font-size:28px;font-weight:900;line-height:1.15;margin-bottom:6px}
+  .subtitulo{color:#b9bede;font-size:15px;margin-bottom:24px}
+  .tarjeta-rol{
+    background:linear-gradient(160deg,#1c1f33,#151728);
+    border:1px solid #ffffff1a;border-radius:20px;padding:22px;margin-bottom:16px;
+    cursor:pointer;transition:transform .15s, border-color .15s;
+  }
+  .tarjeta-rol:active{transform:scale(.985)}
+  .tarjeta-rol.profe{border-color:#ff4d8d55}
+  .tarjeta-rol.alumno{border-color:#a55bff55}
+  .tarjeta-rol h3{font-size:19px;margin-bottom:4px}
+  .tarjeta-rol p{color:#b9bede;font-size:13px}
+  .icono-rol{font-size:30px;margin-bottom:10px;display:block}
+  .badge-demo{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.14em;padding:6px 12px;border-radius:99px;background:#ffffff12;border:1px solid #ffffff1f;color:#a9aed6;margin-bottom:14px}
+  .saludo .grad{background:linear-gradient(135deg,#ff4d8d,#a55bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .fila-stats{display:flex;gap:10px;margin:18px 0 22px}
+  .stat{flex:1;background:#ffffff0d;border:1px solid #ffffff14;border-radius:14px;padding:10px;text-align:center}
+  .stat b{display:block;font-size:17px;font-weight:900;background:linear-gradient(135deg,#ff4d8d,#a55bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat small{color:#b9bede;font-size:11px;font-weight:700;letter-spacing:.06em}
+  .linea-roles{display:flex;gap:12px;margin-bottom:16px}
+  .linea-roles .tarjeta-rol{flex:1;margin-bottom:0;display:flex;flex-direction:column;align-items:flex-start;transition:transform .15s, border-color .15s, box-shadow .15s}
+  .linea-roles .tarjeta-rol:hover{border-color:#a55bff88;box-shadow:0 0 26px #a55bff2e;transform:translateY(-2px)}
+  .linea-roles .tarjeta-rol:active{transform:scale(.985)}
+  .chip-rol{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;margin-bottom:12px}
+  .chip-profe{background:linear-gradient(135deg,#ff4d8d,#a55bff);color:#fff}
+  .chip-alumno{background:linear-gradient(135deg,#4da6ff,#a55bff);color:#fff}
+  .micro{font-size:10px;font-weight:800;letter-spacing:.14em;color:#8a8fb0;margin-bottom:4px}
+  .flecha{margin-top:10px;font-size:13px;font-weight:800;color:#cfd3ff}
+  .aviso-demo{text-align:center;color:#8a8fb0;font-size:11px;margin-top:12px}
+  @media (max-width:380px){.linea-roles{flex-direction:column}}
+  .btn{border:0;border-radius:14px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;width:100%;letter-spacing:.2px}
+  .btn-primario{background:linear-gradient(135deg,#ff4d8d,#a55bff);color:#fff}
+  .btn-secundario{background:#ffffff14;color:#fff;border:1px solid #ffffff22}
+  .btn-peligro{background:#ff4d4d22;color:#ff8080;border:1px solid #ff4d4d44}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .encabezado-seccion{font-weight:800;color:#cfd3ff;font-size:13px;letter-spacing:.08em;margin:22px 0 12px;text-transform:uppercase}
+  .vacio{color:#8a8fb0;text-align:center;padding:30px 10px;font-size:14px}
+  .quiz-item{
+    background:#171a2c;border:1px solid #ffffff14;border-radius:16px;padding:16px;
+    margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .quiz-item b{font-size:15px;display:block;margin-bottom:3px}
+  .quiz-item small{color:#8a8fb0;font-size:12px}
+  .campo{margin-bottom:14px}
+  .campo label{display:block;font-size:12px;color:#b9bede;margin-bottom:6px;font-weight:700}
+  .campo input,.select{
+    width:100%;background:#141629;border:1px solid #ffffff1f;border-radius:12px;
+    padding:13px 14px;color:#fff;font-size:15px;outline:none;
+  }
+  .campo input:focus,.select:focus{border-color:#a55bff}
+  .chk{display:flex;align-items:center;gap:10px;font-weight:700;color:#cfd3ff;margin-bottom:14px;font-size:13px}
+  .chk input{width:18px;height:18px;accent-color:#a55bff;background:#141629}
+  .select-correcta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .sel-opt{border:1px solid #ffffff26;background:#141629;border-radius:10px;padding:8px 10px;cursor:pointer;font-size:13px}
+  .sel-opt.elegida{border-color:#a55bff;background:#a55bff22}
+  .pregunta-editor{
+    background:#171a2c;border:1px solid #ffffff14;border-radius:16px;padding:16px;margin-bottom:14px;
+  }
+  .pregunta-editor .num{font-size:12px;color:#8a8fb0;font-weight:800;letter-spacing:.05em}
+  .fila-botones{display:flex;gap:10px;margin-top:18px}
+  .fila-botones .btn{flex:1}
+  .codigo-gigante{
+    font-size:72px;font-weight:900;text-align:center;letter-spacing:12px;margin:12px 0;
+    background:linear-gradient(135deg,#ff4d8d,#a55bff);-webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .aviso-sala{text-align:center;color:#b9bede;font-size:14px;margin-bottom:18px}
+  .jugador-ficha{
+    background:#171a2c;border:1px solid #ffffff14;border-radius:12px;padding:10px 14px;
+    display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:10px;
+  }
+  .fila-avatar{display:flex;align-items:center;gap:10px;width:100%}
+  .avatar{width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#0d0f1a;flex-shrink:0;text-transform:uppercase}
+  .avatar-grande{width:66px;height:66px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:#0d0f1a;margin:12px auto;text-transform:uppercase}
+  .base-avatar{display:flex;align-items:center;justify-content:center}
+  .paleta{display:flex;gap:8px;flex-wrap:wrap}
+  .swatch{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent}
+  .swatch.elegida{border-color:#fff}
+  .jugador-ficha b{font-size:14px}
+  .jugador-ficha small{color:#8a8fb0;font-size:12px;text-align:right}
+  .tarjeta-pregunta{
+    background:linear-gradient(160deg,#1c1f33,#151728);border:1px solid #a55bff44;
+    border-radius:20px;padding:20px;margin-bottom:16px;
+  }
+  .tarjeta-pregunta .numero{color:#a9aed6;font-size:12px;letter-spacing:.1em;font-weight:800}
+  .tarjeta-pregunta h2{font-size:20px;font-weight:900;margin:10px 0 6px;line-height:1.3}
+  .temporizador{font-size:40px;font-weight:900;text-align:center;margin:8px 0}
+  .temporizador.bajo{color:#ff6b6b}
+  .opciones{margin-top:14px}
+  .opcion{
+    background:#141629;border:2px solid #ffffff1f;border-radius:14px;padding:15px;
+    margin-bottom:10px;cursor:pointer;font-size:15px;font-weight:600;display:flex;align-items:center;gap:12px;
+  }
+  .opcion .letra{
+    min-width:34px;height:34px;border-radius:10px;background:#ffffff12;display:flex;align-items:center;justify-content:center;font-weight:900;
+  }
+  .opcion.seleccionada{border-color:#ff4d8d;background:#ff4d8d1f;animation:pop .3s ease}
+  .opcion.correcta{border-color:#3dff8b;background:#3dff8b1a;animation:pop .35s ease}
+  .opcion.incorrecta{border-color:#ff4d4d66;opacity:.6}
+  .opcion:disabled{cursor:not-allowed}
+  .barra-respuesta{flex:1;text-align:right;color:#ffd166;font-weight:800}
+  .contador-resp{text-align:center;margin:12px 0;color:#ffd166;font-weight:800;font-size:15px}
+  .resultado-msg{text-align:center;padding:26px 10px}
+  .resultado-msg h2{font-size:26px;font-weight:900;margin-bottom:6px}
+  .resultado-msg.ok h2{color:#3dff8b}
+  .resultado-msg.error h2{color:#ff6b6b}
+  .puntaje-grande{font-size:44px;font-weight:900;margin:10px 0}
+  .podio{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:26px 0}
+  .podio .puesto{background:#171a2c;border-radius:16px 16px 0 0;padding:14px;text-align:center;min-width:92px}
+  .podio .avatar{width:40px;height:40px;margin:0 auto 6px;font-size:17px}
+  .podio .puesto b{font-size:14px;display:block;margin-bottom:4px}
+  .podio .puesto small{color:#ffd166;font-weight:800}
+  .podio .pos{font-size:30px;font-weight:900}
+  .pos-1{height:150px;background:linear-gradient(180deg,#ffd16633,#171a2c);border:1px solid #ffd16666}
+  .pos-2{height:110px;background:linear-gradient(180deg,#b8c2e033,#171a2c);border:1px solid #b8c2e044}
+  .pos-3{height:85px;background:linear-gradient(180deg,#cd7f5d33,#171a2c);border:1px solid #cd7f5d44}
+  .tabla-resultados{width:100%;border-collapse:collapse;margin-top:8px}
+  .tabla-resultados td{padding:10px 12px;border-bottom:1px solid #ffffff12;font-size:14px}
+  .tabla-resultados td.r{text-align:right;font-weight:800;color:#ffd166}
+  .stat-resumen{text-align:center;margin:12px 0;color:#cfd3ff;font-weight:800;font-size:14px}
+  .stat-resumen b{color:#3dff8b}
+  .tarjeta-resumen{background:#171a2c;border:1px solid #ffffff14;border-radius:14px;padding:14px;margin-bottom:10px}
+  .tarjeta-resumen .t{font-size:13px;font-weight:800;margin-bottom:6px;line-height:1.4}
+  .mini-barra{height:8px;border-radius:99px;background:#ffffff12;overflow:hidden;margin-top:6px}
+  .mini-barra > div{height:100%;border-radius:99px;background:linear-gradient(90deg,#3dff8b,#ffd166)}
+  .avisos{text-align:center;color:#b9bede;font-size:15px;padding:40px 10px}
+  .nombre-propio{font-size:40px;font-weight:900;text-align:center;background:linear-gradient(135deg,#ff4d8d,#a55bff);-webkit-background-clip:text;background-clip:text;color:transparent;margin:10px 0}
+  .pie{text-align:center;color:#666b92;font-size:12px;padding:26px 10px 40px}
+  .toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:#ff4d4d;color:#fff;font-size:13px;font-weight:700;padding:10px 18px;border-radius:12px;display:none;z-index:99}
+  @keyframes pulsar{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+  .pulso{animation:pulsar 1.4s infinite}
+  @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  @keyframes sacudida{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
+  .anim-sacudida{animation:sacudida .4s ease}
+  @keyframes caer{0%{transform:translateY(-24px) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:.9}}
+  .confeti{position:fixed;top:-24px;width:9px;height:15px;z-index:200;pointer-events:none;border-radius:2px;animation:caer linear forwards}
+</style>
+</head>
+<body>
+<div class="barra">
+  <div class="logo">Clase<b>Épica</b></div>
+  <div class="etiqueta-demo">MODO DEMO</div>
+</div>
+<div id="toast" class="toast"></div>
+
+<div id="pantallaInicio" class="pantalla activa">
+  <div class="hero">
+    <div class="badge-demo">MODO DEMO</div>
+    <div class="saludo">La clase que <span class="grad">todos</span> quieren jugar</div>
+    <div class="subtitulo">Quizzes en vivo, gratuitos y en español. Para toda tu clase, para todo tu colegio.</div>
+    <div class="fila-stats">
+      <div class="stat"><b>100%</b><small>Gratis</small></div>
+      <div class="stat"><b>0</b><small>Anuncios</small></div>
+      <div class="stat"><b>IA</b><small>Incluida</small></div>
+    </div>
+  </div>
+  <div class="linea-roles">
+    <div class="tarjeta-rol profe" onclick="irARol('profe')">
+      <div class="chip-rol chip-profe">P</div>
+      <div class="micro">ENTRAR COMO</div>
+      <h3>Profesor</h3>
+      <p>Crea tus quizzes, usa la IA y juega en vivo con tu clase.</p>
+      <div class="flecha">Entrar →</div>
+    </div>
+    <div class="tarjeta-rol alumno" onclick="irARol('alumno')">
+      <div class="chip-rol chip-alumno">E</div>
+      <div class="micro">ENTRAR COMO</div>
+      <h3>Estudiante</h3>
+      <p>Entra con el código de la sala y responde en tu celular.</p>
+      <div class="flecha">Entrar →</div>
+    </div>
+  </div>
+  <button class="btn btn-secundario" onclick="verRanking()">Ranking del colegio</button>
+  <div class="aviso-demo">Consejo demo: abre 2 pestañas — una como profe y otra como estudiante</div>
+  <div class="pie">Clase Épica · Modo demo · Sin anuncios</div>
+</div>
+
+<div id="pantallaRanking" class="pantalla">
+  <div class="saludo">Ranking del colegio</div>
+  <div class="subtitulo">Los puntos se acumulan entre todas las partidas. La grandeza está en la constancia.</div>
+  <div id="rankingContenido"></div>
+  <button class="btn btn-secundario" onclick="volverDeRanking()">Volver</button>
+</div>
+
+<div id="pantallaProfeHome" class="pantalla">
+  <div class="saludo">Hola, profe</div>
+  <div class="subtitulo">Aquí viven tus quizzes.</div>
+  <button class="btn btn-primario" onclick="abrirEditorQuiz()">+ Crear quiz</button>
+  <div class="encabezado-seccion">Mis quizzes</div>
+  <div id="listaQuizzes"></div>
+  <button class="btn btn-secundario" style="margin-top:8px" onclick="abrirChat()">Asesor IA del profe</button>
+  <button class="btn btn-secundario" style="margin-top:8px" onclick="verRanking()">Ranking del colegio</button>
+  <button class="btn btn-secundario" style="margin-top:8px" onclick="salirATodo()">Salir</button>
+</div>
+
+<div id="pantallaProfeEditor" class="pantalla">
+  <div class="saludo">Nuevo quiz</div>
+  <div class="campo">
+    <label>Nombre del quiz</label>
+    <input id="quizNombre" placeholder="Ej: Geografía de 9º">
+  </div>
+  <label class="chk"><input type="checkbox" id="quizAleatorio"> Mezclar preguntas al azar</label>
+  <div class="pregunta-editor" style="border-color:#a55bff44">
+    <div class="num">GENERAR CON IA (OPCIONAL)</div>
+    <div class="campo">
+      <label>Qué quieres que cree la IA (pide lo que sea)</label>
+      <input id="iaTema" placeholder="Ej: 10 preguntas de química, grado 9, poniendo fórmulas de elementos">
+    </div>
+    <div style="display:flex;gap:10px">
+      <div class="campo" style="flex:0 0 90px">
+        <label>Preguntas</label>
+        <input id="iaCant" inputmode="numeric" value="10">
+      </div>
+      <div class="campo" style="flex:1">
+        <label>Dificultad</label>
+        <select id="iaDificultad" class="select">
+          <option value="fácil">Fácil</option>
+          <option value="media" selected>Media</option>
+          <option value="difícil">Difícil</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primario" onclick="generarQuizConIA()">Generar quiz con IA</button>
+    <div style="font-size:12px;color:#8a8fb0;margin-top:10px;line-height:1.5">La IA crea las preguntas aquí; tú las revisas antes de guardar. Necesita llave gratuita de Google (una sola vez). <a href="#" onclick="configurarLlaveIA();return false" style="color:#a55bff">Configurar llave</a> · <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#a55bff">Conseguir llave</a></div>
+    <div id="iaUsoInfo" style="font-size:12px;color:#3dff8b;margin-top:10px;font-weight:700"></div>
+  </div>
+  <div id="listaPreguntasEditor"></div>
+  <button class="btn btn-secundario" onclick="agregarPreguntaEditor()">+ Agregar pregunta</button>
+  <div class="fila-botones">
+    <button class="btn btn-primario" onclick="guardarQuiz()">Guardar quiz</button>
+    <button class="btn btn-peligro" onclick="volverHomeProfe()">Cancelar</button>
+  </div>
+</div>
+
+<div id="pantallaProfeSala" class="pantalla">
+  <div class="saludo" id="profeSalaTitulo">Tu sala</div>
+  <div id="profeSalaContenido"></div>
+</div>
+
+<div id="pantallaProfeChat" class="pantalla">
+  <div class="saludo" style="font-size:22px">Asesor IA del profe</div>
+  <div class="subtitulo">Pregúntale lo que necesites para tu clase: redactar, explicar, sugerir distractores...</div>
+  <div id="chatCaja" style="max-height:50vh;overflow-y:auto;background:#12142b;border:1px solid #ffffff14;border-radius:14px;padding:10px;margin-bottom:12px"></div>
+  <div style="display:flex;gap:10px">
+    <div class="campo" style="flex:1;margin-bottom:0">
+      <input id="chatEntrada" placeholder="Ej: Hazme 3 distractores creíbles para la pregunta sobre los elementos químicos">
+    </div>
+    <button id="btnEnviarChat" class="btn btn-primario" style="width:auto;padding:13px 22px" onclick="enviarChat()">Enviar</button>
+  </div>
+  <button class="btn btn-secundario" style="margin-top:12px" onclick="volverChat()">Volver</button>
+</div>
+
+<div id="pantallaAlumnoJoin" class="pantalla">
+  <div class="saludo">Entra a la sala</div>
+  <div class="subtitulo">El profe te dio un código de 4 dígitos.</div>
+  <div class="campo">
+    <label>Código de la sala</label>
+    <input id="alumnoCodigo" inputmode="numeric" placeholder="Ej: 4821">
+  </div>
+  <div class="campo">
+    <label>Tu apodo</label>
+    <input id="alumnoApodo" placeholder="Ej: Santiago24">
+  </div>
+  <div class="campo">
+    <label>Elige tu color de avatar</label>
+    <div class="paleta" id="selectorColor"></div>
+    <div class="base-avatar"><div class="avatar-grande" id="vistaAvatar" style="background:#a55bff">A</div></div>
+  </div>
+  <button class="btn btn-primario" onclick="unirseSala()">Entrar a la sala</button>
+  <button class="btn btn-secundario" style="margin-top:10px" onclick="salirATodo()">Volver</button>
+</div>
+
+<div id="pantallaAlumnoSala" class="pantalla">
+  <div id="alumnoSalaContenido"></div>
+</div>
+
+<script>
+var $ = function(id){ return document.getElementById(id); };
+var rolActual = null;
+var miApodo = null;
+var miColor = "#a55bff";
+var salaCode = null;
+var quizEditando = null;
+var escuchasActivas = [];
+var _usaServidor = false;
+var _cacheRoom = {};
+var _baseFirebase = "https://app-para-colegios-1f026-default-rtdb.firebaseio.com/";
+function urlRoom(codigo){ return _baseFirebase + "rooms/" + codigo + ".json"; }
+var COLORES_AVATAR = ["#ff4d8d","#a55bff","#3dff8b","#ffd166","#4da6ff","#ff8a4d","#ff4d4d","#8affc1"];
+var _ultimoEstadoAlumno = null;
+var _ultimoTick = -1;
+
+function irARol(rol){
+  rolActual = rol;
+  if(rol === "profe"){
+    activar("pantallaProfeHome");
+    renderListaQuizzes();
+  }else{
+    activar("pantallaAlumnoJoin");
+    prepararJoin();
+  }
+}
+
+function activar(id){
+  [].forEach.call(document.querySelectorAll(".pantalla"),function(p){ p.classList.remove("activa"); });
+  $(id).classList.add("activa");
+}
+
+function toastMsg(msg){
+  var t = $("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  clearTimeout(t._tm);
+  t._tm = setTimeout(function(){ t.style.display = "none"; }, 2600);
+}
+
+function salirATodo(){
+  limpiarEscuchas();
+  if(salaCode){ borrarRoomDemo(salaCode); }
+  _ultimoEstadoAlumno = null;
+  salaCode = null; miApodo = null; rolActual = null;
+  activar("pantallaInicio");
+}
+
+/* ---------- SONIDOS (Web Audio, sin archivos) ---------- */
+var _ctx = null;
+function ctxAudio(){
+  if(!_ctx){ try{ _ctx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){} }
+  return _ctx;
+}
+function tono(frec, dur, tipo, vol, cuando){
+  var c = ctxAudio(); if(!c) return;
+  try{
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = tipo || "sine"; o.frequency.value = frec;
+    var t0 = c.currentTime + (cuando || 0);
+    g.gain.setValueAtTime(vol || 0.14, t0);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t0); o.stop(t0 + dur + 0.05);
+  }catch(e){}
+}
+function sonClick(){ tono(600, 0.07, "square", 0.05); }
+function sonCorrecto(){ tono(660, 0.12, "sine", 0.17); tono(880, 0.2, "sine", 0.17, 0.12); }
+function sonError(){ tono(300, 0.18, "sawtooth", 0.11); tono(220, 0.24, "sawtooth", 0.11, 0.15); }
+function sonInicio(){ tono(523, 0.14, "triangle", 0.15); tono(659, 0.14, "triangle", 0.15, 0.13); tono(784, 0.26, "triangle", 0.15, 0.26); }
+function sonRevelado(){ tono(440, 0.1, "sine", 0.09); }
+function sonFin(){ tono(523, 0.15, "triangle", 0.14); tono(659, 0.15, "triangle", 0.14, 0.14); tono(784, 0.2, "triangle", 0.14, 0.28); tono(1046, 0.5, "sine", 0.14, 0.48); }
+function tonoTick(){ tono(760, 0.05, "square", 0.05); }
+
+function lluviaConfetis(){
+  try{
+    for(var i = 0; i < 28; i++){
+      var d = document.createElement("div");
+      d.className = "confeti";
+      d.style.left = (Math.random() * 100) + "vw";
+      d.style.background = COLORES_AVATAR[Math.floor(Math.random() * COLORES_AVATAR.length)];
+      d.style.animationDuration = (2.2 + Math.random() * 2.2) + "s";
+      d.style.animationDelay = (Math.random() * 0.7) + "s";
+      document.body.appendChild(d);
+      (function(el){ setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 5400); })(d);
+    }
+  }catch(e){}
+}
+
+/* ---------- PERFIL + RANKING (local, modo demo) ---------- */
+function leerPerfil(){ try{ return JSON.parse(localStorage.getItem("ce_miPerfil") || "{}"); }catch(e){ return {}; } }
+function guardarPerfil(p){ localStorage.setItem("ce_miPerfil", JSON.stringify(p)); }
+function leerRanking(){ try{ return JSON.parse(localStorage.getItem("ce_ranking") || "{}"); }catch(e){ return {}; } }
+function guardarRanking(r){ localStorage.setItem("ce_ranking", JSON.stringify(r)); }
+
+function avatarHtml(color, nombre){
+  var letra = String(nombre || "?").charAt(0) || "?";
+  return '<div class="avatar" style="background:' + (color || "#a55bff") + '">' + esc(letra) + '</div>';
+}
+
+function prepararJoin(){
+  var perfil = leerPerfil();
+  if(perfil.apodo) $("alumnoApodo").value = perfil.apodo;
+  miColor = perfil.color || "#a55bff";
+  pintarPaleta();
+}
+
+function pintarPaleta(){
+  var html = "";
+  COLORES_AVATAR.forEach(function(c){
+    html += '<div class="swatch' + (c === miColor ? " elegida" : "") + '" style="background:' + c + '" onclick="elegirColor(\'' + c + '\')"></div>';
+  });
+  $("selectorColor").innerHTML = html;
+  actualizarVistaAvatar();
+}
+
+function elegirColor(c){
+  miColor = c;
+  pintarPaleta();
+}
+
+function actualizarVistaAvatar(){
+  var nombre = $("alumnoApodo").value || "A";
+  var av = $("vistaAvatar");
+  av.style.background = miColor;
+  av.textContent = String(nombre).charAt(0).toUpperCase();
+}
+
+function verRanking(){
+  renderRanking();
+  activar("pantallaRanking");
+}
+
+function volverDeRanking(){
+  activar(rolActual === "profe" ? "pantallaProfeHome" : "pantallaInicio");
+  if(rolActual === "profe") renderListaQuizzes();
+}
+
+function renderRanking(){
+  var rank = leerRanking();
+  var arr = [];
+  Object.keys(rank).forEach(function(n){
+    arr.push({ nombre: n, color: rank[n].color, pts: rank[n].pts || 0, partidas: rank[n].partidas || 0, primeros: rank[n].primeros || 0 });
+  });
+  arr.sort(function(a, b){ return b.pts - a.pts; });
+  var c = $("rankingContenido");
+  if(!arr.length){
+    c.innerHTML = '<div class="vacio">Todavía no hay rankings. Juega un quiz para que los puntos empiecen a sumar.</div>';
+    return;
+  }
+  var html = '';
+  arr.slice(0, 25).forEach(function(j, i){
+    html += '<div class="jugador-ficha"><div class="fila-avatar"><div class="pos" style="font-size:18px;min-width:26px">' + (i+1) + 'º</div>' + avatarHtml(j.color, j.nombre) + '<b>' + esc(j.nombre) + '</b></div>' +
+      '<small>' + j.pts + ' pts · ' + j.partidas + (j.primeros ? ' · ' + j.primeros + ' primeros' : '') + '</small></div>';
+  });
+  c.innerHTML = html;
+}
+
+/* ---------- GESTIÓN DE QUIZZES (local, modo demo) ---------- */
+function leerQuizzes(){ try{ return JSON.parse(localStorage.getItem("ce_quizzes") || "[]"); }catch(e){ return []; } }
+function guardarQuizzes(lista){ localStorage.setItem("ce_quizzes", JSON.stringify(lista)); }
+
+function renderListaQuizzes(){
+  var lista = leerQuizzes();
+  var c = $("listaQuizzes");
+  if(!lista.length){ c.innerHTML = '<div class="vacio">Todavía no tienes quizzes. Crea el primero arriba.</div>'; return; }
+  var html = "";
+  lista.forEach(function(q, i){
+    html += '<div class="quiz-item"><div><b>' + q.nombre + '</b><small>' + q.preguntas.length + ' preguntas' + (q.aleatorio ? ' · al azar' : '') + '</small></div>' +
+      '<div class="fila-botones" style="min-width:150px">' +
+      '<button class="btn btn-secundario" style="padding:12px;font-size:13px" onclick="editarQuiz(' + i + ')">Editar</button>' +
+      '<button class="btn btn-primario" style="padding:12px;font-size:13px" onclick="comenzarQuiz(' + i + ')">Jugar</button>' +
+      '</div></div>';
+  });
+  c.innerHTML = html;
+}
+
+function preguntaEditadaHTML(idx){
+  var p = quizEditando.preguntas[idx];
+  var tipoSel = '<div class="campo"><label>Tipo de pregunta</label><select id="qe_p_tipo' + idx + '" class="select" onchange="cambiarTipoPregunta(' + idx + ')">' +
+    '<option value="multi"' + (p.tipo === "vf" ? "" : " selected") + '>Opción múltiple (A, B, C, D)</option>' +
+    '<option value="vf"' + (p.tipo === "vf" ? " selected" : "") + '>Verdadero / Falso</option></select></div>';
+  var opcionesHTML = "";
+  if(p.tipo === "vf"){
+    var sel = "";
+    for(var i = 0; i < 2; i++){
+      sel += '<span class="' + (p.correcta === i ? "sel-opt elegida" : "sel-opt") + '" onclick="marcarCorrecta(' + idx + ',' + i + ')">' + (i === 0 ? "Verdadero" : "Falso") + '</span>';
+    }
+    opcionesHTML = '<div class="campo"><label>¿Cuál es la correcta?</label><div class="select-correcta">' + sel + '</div></div>';
+  }else{
+    var sel2 = "";
+    for(var j = 0; j < 4; j++){
+      sel2 += '<span class="' + (p.correcta === j ? "sel-opt elegida" : "sel-opt") + '" onclick="marcarCorrecta(' + idx + ',' + j + ')">' + letraDe(j) + ': ' + (p.opciones[j] || "Opción " + (j+1)) + '</span>';
+    }
+    opcionesHTML = '<div class="campo"><label>Opciones</label>' +
+      '<input id="qe_p_o0_' + idx + '" value="' + esc(p.opciones[0] || "") + '" placeholder="Opción A">' +
+      '<input id="qe_p_o1_' + idx + '" value="' + esc(p.opciones[1] || "") + '" placeholder="Opción B" style="margin-top:8px">' +
+      '<input id="qe_p_o2_' + idx + '" value="' + esc(p.opciones[2] || "") + '" placeholder="Opción C" style="margin-top:8px">' +
+      '<input id="qe_p_o3_' + idx + '" value="' + esc(p.opciones[3] || "") + '" placeholder="Opción D" style="margin-top:8px">' +
+      '<div class="select-correcta">' + sel2 + '</div></div>';
+  }
+  return '<div class="pregunta-editor"><div class="num">PREGUNTA ' + (idx+1) + '</div>' + tipoSel +
+    '<div class="campo"><label>Texto de la pregunta</label><input id="qe_p_t' + idx + '" value="' + esc(p.pregunta) + '" placeholder="Ej: ¿Cuál es la capital de Colombia?"></div>' +
+    opcionesHTML +
+    '<div class="campo"><label>Tiempo (segundos)</label><input id="qe_p_s' + idx + '" inputmode="numeric" value="' + p.seg + '"></div>' +
+    '<button class="btn btn-secundario" style="padding:10px;font-size:13px;margin-bottom:8px" onclick="mejorarPreguntaIA(' + idx + ')">Mejorar esta pregunta con IA</button>' +
+    '<button class="btn btn-peligro" style="padding:10px;font-size:13px" onclick="quitarPreguntaEditor(' + idx + ')">Eliminar pregunta</button></div>';
+}
+
+function esc(t){
+  return String(t === null || t === undefined ? "" : t).replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function letraDe(i){ return ["A","B","C","D"][i] || String.fromCharCode(65 + i); }
+
+function nuevaPregunta(){
+  return { pregunta: "", opciones: ["","","",""], correcta: 0, seg: 20, tipo: "multi" };
+}
+
+function abrirEditorQuiz(){
+  quizEditando = { nombre: "", preguntas: [nuevaPregunta()], aleatorio: false };
+  $("quizNombre").value = "";
+  $("quizAleatorio").checked = false;
+  pintarEditor();
+  activar("pantallaProfeEditor");
+}
+
+function editarQuiz(i){
+  var lista = leerQuizzes();
+  quizEditando = JSON.parse(JSON.stringify(lista[i]));
+  $("quizNombre").value = quizEditando.nombre;
+  $("quizAleatorio").checked = !!quizEditando.aleatorio;
+  pintarEditor();
+  activar("pantallaProfeEditor");
+}
+
+function pintarEditor(){
+  var html = "";
+  quizEditando.preguntas.forEach(function(p, idx){ html += preguntaEditadaHTML(idx); });
+  $("listaPreguntasEditor").innerHTML = html;
+  pintarUsoIA();
+}
+
+function agregarPreguntaEditor(){
+  quizEditando.preguntas.push(nuevaPregunta());
+  pintarEditor();
+}
+
+function quitarPreguntaEditor(idx){
+  quizEditando.preguntas.splice(idx, 1);
+  pintarEditor();
+}
+
+function marcarCorrecta(idx, opt){
+  quizEditando.preguntas[idx].correcta = opt;
+  pintarEditor();
+}
+
+function cambiarTipoPregunta(idx){
+  var sel = $("qe_p_tipo" + idx);
+  var tipo = sel ? sel.value : "multi";
+  var p = quizEditando.preguntas[idx];
+  p.tipo = tipo;
+  if(tipo === "vf"){ p.opciones = ["Verdadero","Falso"]; if(p.correcta > 1) p.correcta = 0; }
+  pinEditor();
+  pintarEditor();
+}
+
+function leerValoresEditor(){
+  var nombre = $("quizNombre").value.trim();
+  var preguntas = [];
+  quizEditando.preguntas.forEach(function(_, idx){
+    var texto = ($("qe_p_t" + idx) ? $("qe_p_t" + idx).value : "").trim();
+    var seg = parseInt(($("qe_p_s" + idx) ? $("qe_p_s" + idx).value : ""), 10) || 20;
+    var tipo = ($("qe_p_tipo" + idx) ? $("qe_p_tipo" + idx).value : "multi") === "vf" ? "vf" : "multi";
+    var opciones = [];
+    if(tipo === "vf"){
+      opciones = ["Verdadero","Falso"];
+    }else{
+      for(var i = 0; i < 4; i++){
+        opciones.push(($("qe_p_o" + i + "_" + idx) ? $("qe_p_o" + i + "_" + idx).value : "").trim());
+      }
+    }
+    preguntas.push({ pregunta: texto, opciones: opciones, correcta: quizEditando.preguntas[idx].correcta, seg: Math.min(120, Math.max(5, seg)), tipo: tipo });
+  });
+  return { nombre: nombre, preguntas: preguntas, aleatorio: !!$("quizAleatorio").checked };
+}
+
+function guardarQuiz(){
+  var datos = leerValoresEditor();
+  if(!datos.nombre){ toastMsg("Ponle un nombre al quiz primero."); return; }
+  var completas = datos.preguntas.filter(function(p){
+    return p.pregunta && p.opciones.every(function(o){ return !!o; });
+  });
+  if(!completas.length){ toastMsg("Completa al menos una pregunta (texto y opciones)."); return; }
+  var lista = leerQuizzes();
+  lista.push(datos);
+  guardarQuizzes(lista);
+  quizEditando = null;
+  renderListaQuizzes();
+  activar("pantallaProfeHome");
+  toastMsg("Quiz guardado");
+}
+
+function volverHomeProfe(){
+  quizEditando = null;
+  activar("pantallaProfeHome");
+  renderListaQuizzes();
+}
+
+/* ---------- GENERAR QUIZ CON IA (Gemini gratis, totalmente opcional) ---------- */
+var modelosIA = ["gemini-3.7-flash", "gemini-3.5-flash"];
+var limiteDiarioIA = 30;
+
+function hoyDia(){ var d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+function leerUsoIA(){ try{ return JSON.parse(localStorage.getItem("ce_ia_uso") || '{"fecha":"","n":0}'); }catch(e){ return { fecha: "", n: 0 }; } }
+function guardarUsoIA(u){ try{ localStorage.setItem("ce_ia_uso", JSON.stringify(u)); }catch(e){} }
+function usoIAHoy(){
+  var u = leerUsoIA();
+  if(u.fecha !== hoyDia()){ u = { fecha: hoyDia(), n: 0 }; }
+  return { n: u.n || 0, limite: limiteDiarioIA };
+}
+function sumarUsoIA(){
+  var u = leerUsoIA();
+  if(u.fecha !== hoyDia()){ u = { fecha: hoyDia(), n: 0 }; }
+  u.n = (u.n || 0) + 1;
+  guardarUsoIA(u);
+}
+function pintarUsoIA(){
+  var el = $("iaUsoInfo");
+  if(!el) return;
+  var u = usoIAHoy();
+  el.innerHTML = "Hoy llevas <b>" + u.n + "</b> de <b>" + u.limite + "</b> generaciones con IA" + (u.n >= u.limite ? " — límite alcanzado" : ".");
+}
+
+function leerLlaveIA(){ try{ return localStorage.getItem("ce_genai_key") || ""; }catch(e){ return ""; } }
+function guardarLlaveIA(k){ try{ localStorage.setItem("ce_genai_key", k); }catch(e){} }
+
+function configurarLlaveIA(){
+  var actual = leerLlaveIA();
+  var nueva = prompt("Pega tu llave gratuita de Google (Gemini).\nSe guarda solo en este navegador.\nPara conseguirla entra a: aistudio.google.com/apikey\n\n" + (actual ? "Llave actual: " + actual.slice(0, 5) + "..." : "Aún no tienes llave guardada."), actual);
+  if(nueva === null || !nueva.trim()) return;
+  guardarLlaveIA(nueva.trim());
+  toastMsg("Llave guardada");
+}
+
+function pedirAIA(texto, alListo, alError, boton, jsonMode){
+  var llave = leerLlaveIA();
+  if(!llave){
+    configurarLlaveIA();
+    llave = leerLlaveIA();
+  }
+  if(!llave){ alError("Necesitas configurar la llave gratuita de Google."); return; }
+  var generacion = { temperature: 0.5 };
+  if(jsonMode){ generacion.responseMimeType = "application/json"; }
+  var cuerpo = {
+    systemInstruction: { parts: [{ text: "Eres un asistente experto de profesores escolares en español. Claro, útil y apropiado para el aula. Si te piden JSON, respondes SOLO con JSON válido." }] },
+    contents: [{ role: "user", parts: [{ text: texto }] }],
+    generationConfig: generacion
+  };
+  var lanzar = function(modelInd, reint){
+    var reintentar = function(){
+      if(reint < 4){
+        if(boton){ boton.disabled = true; boton.textContent = "Reintentando..."; }
+        setTimeout(function(){ lanzar(modelInd, reint + 1); }, 900 * (reint + 1));
+        return true;
+      }
+      return false;
+    };
+    if(modelInd >= modelosIA.length){ alError("La IA no respondió hoy. Revisa tu llave, espera un momento y vuelve a intentar."); return; }
+    fetch("https://generativelanguage.googleapis.com/v1beta/models/" + modelosIA[modelInd] + ":generateContent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": llave },
+      body: JSON.stringify(cuerpo)
+    }).then(function(resp){
+      resp.json().catch(function(){ return null; }).then(function(data){
+        var st = resp.status;
+        if(st === 404){ lanzar(modelInd + 1, 0); return; }
+        if(st === 400 || st === 401 || st === 403){ alError("Tu llave no es válida o está bloqueada. Genera una nueva en aistudio.google.com/apikey."); return; }
+        if(st === 429 || st === 503){
+          if(reintentar()) return;
+          if(modelInd + 1 < modelosIA.length){ lanzar(modelInd + 1, 0); return; }
+          alError("La IA está muy ocupada en este momento. Espera unos segundos y vuelve a intentar.");
+          return;
+        }
+        if(!data || data.error){ alError("La IA respondió con un problema. Revisa tu llave o vuelve a intentar."); return; }
+        var txt = "";
+        try{ txt = (data.candidates[0].content.parts[0].text || "").replace(/```json/g, "").replace(/```/g, "").trim(); }catch(e){}
+        if(!txt){
+          if(reintentar()) return;
+          alError("La IA no dio respuesta. Vuelve a intentar.");
+          return;
+        }
+        alListo(txt);
+      });
+    }).catch(function(){
+      if(reintentar()) return;
+      alError("¿Estás conectada a internet? No llegó la respuesta de la IA.");
+    });
+  };
+  lanzar(0, 0);
+}
+
+function terminarGenerar(boton, msg){
+  if(boton){ boton.disabled = false; boton.textContent = "Generar quiz con IA"; }
+  if(msg) toastMsg(msg);
+}
+
+function generarQuizConIA(){
+  if(usoIAHoy().n >= limiteDiarioIA){ terminarGenerar(null, "Ya usaste las " + limiteDiarioIA + " acciones de IA de hoy. Escribe las preguntas a mano o vuelve mañana."); return; }
+  var pedido = ($("iaTema").value || "").trim();
+  var cant = Math.min(20, Math.max(3, parseInt(($("iaCant").value || "10"), 10) || 10));
+  var dif = ($("iaDificultad") && $("iaDificultad").value) || "media";
+  if(!pedido){ toastMsg("Escribe primero qué quieres que la IA cree, por ejemplo: 10 preguntas sobre fracciones, grado 6."); return; }
+  var boton = null;
+  [].forEach.call(document.querySelectorAll("button"), function(b){ if(b.textContent.indexOf("Generar quiz con IA") >= 0) boton = b; });
+  if(boton){ boton.disabled = true; boton.textContent = "Generando..."; }
+  var texto = "Un profesor te pide esto para su clase: \"" + pedido + "\". Crea un quiz de opción múltiple a partir de ese pedido, apropiado para el aula. Si el pedido no dice cuántas preguntas, haz " + cant + ". Dificultad aproximada: " + dif + ". Cada pregunta tiene 4 opciones y solo una correcta. Lenguaje apropiado para el aula, preguntas variadas y sin repetir formato. Responde SOLO con JSON válido, sin texto adicional, con esta estructura exacta: {\"preguntas\":[{\"pregunta\":\"...\",\"opciones\":[\"A\",\"B\",\"C\",\"D\"],\"correcta\":2,\"seg\":20}]}. correcta es el índice (0 a 3) de la opción correcta. seg entre 10 y 30.";
+  pedirAIA(texto, function(txt){
+    var estructura = null;
+    try{
+      var ini = txt.indexOf("{"); var fin = txt.lastIndexOf("}");
+      estructura = JSON.parse(ini >= 0 ? txt.slice(ini, fin + 1) : txt);
+    }catch(e){ terminarGenerar(boton, "La IA respondió algo raro. Vuelve a intentar."); return; }
+    var preguntas = [];
+    var lista = (estructura && estructura.preguntas) || [];
+    if(!Array.isArray(lista)) lista = [lista];
+    lista.forEach(function(pp){
+      if(!pp || !pp.pregunta || !Array.isArray(pp.opciones)) return;
+      var opciones = pp.opciones.map(function(o){ return String(o); }).filter(function(o){ return o; });
+      if(opciones.length < 2) return;
+      var correcta = pp.correcta;
+      if(typeof correcta === "string"){ correcta = "ABCD".indexOf(String(correcta).toUpperCase()); }
+      correcta = parseInt(correcta, 10);
+      if(isNaN(correcta) || correcta < 0 || correcta >= opciones.length) correcta = 0;
+      var esVF = opciones.length === 2 && opciones[0].toLowerCase().indexOf("verd") >= 0 && opciones[1].toLowerCase().indexOf("fals") >= 0;
+      if(esVF){
+        opciones = ["Verdadero", "Falso"];
+      }else{
+        while(opciones.length < 4){ opciones.push(opciones.length < 3 ? "Opción " + "ABCD"[opciones.length] : "Opción D"); }
+      }
+      preguntas.push({
+        pregunta: String(pp.pregunta),
+        opciones: opciones,
+        correcta: correcta,
+        seg: Math.min(30, Math.max(10, parseInt(pp.seg, 10) || 20)),
+        tipo: esVF ? "vf" : "multi"
+      });
+    });
+    if(!preguntas.length){ terminarGenerar(boton, "La IA no creó preguntas. Ajusta el pedido y vuelve a intentar."); return; }
+    quizEditando.preguntas = preguntas;
+    if(!$("quizNombre").value.trim()) $("quizNombre").value = pedido;
+    sumarUsoIA();
+    pintarUsoIA();
+    pintarEditor();
+    terminarGenerar(boton, "Listo: " + preguntas.length + " preguntas generadas. Revísalas y guarda.");
+  }, function(msg){ terminarGenerar(boton, msg); }, boton, true);
+}
+
+function mejorarPreguntaIA(idx){
+  if(usoIAHoy().n >= limiteDiarioIA){ toastMsg("Ya usaste las " + limiteDiarioIA + " acciones de IA de hoy. Escribe manual o vuelve mañana."); return; }
+  var p = quizEditando.preguntas[idx];
+  var textoPregunta = ($("qe_p_t" + idx) ? $("qe_p_t" + idx).value : p.pregunta) || "";
+  if(!textoPregunta.trim()){ toastMsg("Escribe primero el texto de la pregunta para poder mejorarla."); return; }
+  var texto;
+  if(p.tipo === "vf"){
+    texto = "Mejora esta pregunta de Verdadero/Falso para un quiz escolar: hazla clara y sin dobles sentidos. Respóndeme SOLO con JSON válido y sin texto adicional: {\"pregunta\":\"...\",\"correcta\":0} donde correcta es 0=Verdadero, 1=Falso. Pregunta actual: \"" + textoPregunta + "\". Correcta actual: " + p.correcta + ".";
+  }else{
+    var ops = [];
+    for(var i = 0; i < 4; i++){ ops.push(($("qe_p_o" + i + "_" + idx) ? $("qe_p_o" + i + "_" + idx).value : p.opciones[i]) || ""); }
+    texto = "Mejora esta pregunta de opción múltiple para un quiz escolar: redáctala clara y sin ambigüedades, y renueva las opciones con 3 distractores creíbles que confundan a quien no estudió. Respóndeme SOLO con JSON válido y sin texto adicional: {\"pregunta\":\"...\",\"opciones\":[\"A\",\"B\",\"C\",\"D\"],\"correcta\":N}. correcta es el índice (0 a 3) de la respuesta correcta. Pregunta actual: \"" + textoPregunta + "\". Opciones actuales: 1) " + ops[0] + " 2) " + ops[1] + " 3) " + ops[2] + " 4) " + ops[3] + ". Correcta actual: " + p.correcta + ".";
+  }
+  var boton = null;
+  [].forEach.call(document.querySelectorAll("button"), function(b){ if(b.textContent.indexOf("Mejorar esta pregunta con IA") >= 0) boton = b; });
+  if(boton){ boton.disabled = true; boton.textContent = "Mejorando..."; }
+  pedirAIA(texto, function(txt){
+    var estructura = null;
+    try{
+      var ini = txt.indexOf("{"); var fin = txt.lastIndexOf("}");
+      estructura = JSON.parse(ini >= 0 ? txt.slice(ini, fin + 1) : txt);
+    }catch(e){}
+    if(!estructura || !estructura.pregunta){
+      if(boton){ boton.disabled = false; boton.textContent = "Mejorar esta pregunta con IA"; }
+      toastMsg("La IA respondió algo raro. Vuelve a intentar.");
+      return;
+    }
+    if(p.tipo === "vf"){
+      var c = estructura.correcta;
+      c = (c === 1 || String(c).toUpperCase() === "F" || String(c).toUpperCase() === "FALSO") ? 1 : 0;
+      quizEditando.preguntas[idx].correcta = c;
+    }else{
+      var opciones = estructura.opciones.map(function(o){ return String(o); }).filter(function(o){ return o; });
+      while(opciones.length < 4){ opciones.push(opciones.length < 3 ? "Opción " + "ABCD"[opciones.length] : "Opción D"); }
+      var correcta = estructura.correcta;
+      if(typeof correcta === "string"){ correcta = "ABCD".indexOf(String(correcta).toUpperCase()); }
+      correcta = parseInt(correcta, 10);
+      if(isNaN(correcta) || correcta < 0 || correcta >= opciones.length) correcta = 0;
+      quizEditando.preguntas[idx].opciones = opciones;
+      quizEditando.preguntas[idx].correcta = correcta;
+    }
+    quizEditando.preguntas[idx].pregunta = String(estructura.pregunta);
+    sumarUsoIA();
+    pintarUsoIA();
+    pintarEditor();
+    toastMsg("Pregunta mejorada. Revísala y guarda el quiz.");
+  }, function(msg){
+    if(boton){ boton.disabled = false; boton.textContent = "Mejorar esta pregunta con IA"; }
+    toastMsg(msg);
+  }, boton, true);
+}
+
+/* ---------- ASESOR IA (chat del profe) ---------- */
+var chatHistorial = [];
+
+function abrirChat(){
+  chatHistorial = [];
+  $("chatCaja").innerHTML = '<div class="avisos" style="padding:8px">Soy el asesor IA. Pregúntame lo que necesites para tu clase.</div>';
+  activar("pantallaProfeChat");
+  setTimeout(function(){ var e = $("chatEntrada"); if(e) e.focus(); }, 60);
+}
+
+function renderChat(){
+  var caja = $("chatCaja");
+  if(!caja) return;
+  var html = "";
+  chatHistorial.forEach(function(m){
+    var estilo = m.rol === "profe"
+      ? 'background:#a55bff33;margin-left:auto;border:1px solid #a55bff66;text-align:right'
+      : 'background:#171a2c;border:1px solid #ffffff18';
+    html += '<div style="max-width:86%;padding:10px 14px;border-radius:14px;margin:7px 0;font-size:14px;line-height:1.45;' + estilo + '">' + esc(m.texto) + '</div>';
+  });
+  caja.innerHTML = html;
+  caja.scrollTop = caja.scrollHeight;
+}
+
+function enviarChat(){
+  var entrada = $("chatEntrada");
+  var txt = (entrada.value || "").trim();
+  if(!txt) return;
+  if(usoIAHoy().n >= limiteDiarioIA){ toastMsg("Ya usaste las " + limiteDiarioIA + " acciones de IA de hoy. Vuelve mañana."); return; }
+  chatHistorial.push({ rol: "profe", texto: txt });
+  entrada.value = "";
+  renderChat();
+  var conv = chatHistorial.slice(-6).map(function(m){ return (m.rol === "profe" ? "Profesor: " : "Asesor IA: ") + m.texto; }).join("\n");
+  var texto = "Eres el asesor IA de un profesor. Ayudas a redactar preguntas, explicar temas, sugerir distractores y preparar clases. Responde claro, en español, y de forma breve (máximo 150 palabras).\n\n" + conv + "\nResponde al último mensaje del profesor.";
+  var boton = $("btnEnviarChat");
+  if(boton){ boton.disabled = true; boton.textContent = "..."; }
+  pedirAIA(texto, function(txt){
+    chatHistorial.push({ rol: "ia", texto: txt });
+    renderChat();
+    sumarUsoIA();
+    if(boton){ boton.disabled = false; boton.textContent = "Enviar"; }
+  }, function(msg){
+    if(boton){ boton.disabled = false; boton.textContent = "Enviar"; }
+    toastMsg(msg);
+  }, boton, false);
+}
+
+function volverChat(){
+  activar("pantallaProfeHome");
+  renderListaQuizzes();
+}
+
+/* ---------- SALA EN VIVO (modo demo con 2 pestañas) ---------- */
+function claveRoom(codigo){ return "ce_room_" + codigo; }
+
+function leerRoom(codigo){
+  if(_cacheRoom[codigo] !== undefined) return _cacheRoom[codigo];
+  try{ var v = localStorage.getItem(claveRoom(codigo)); if(v){ var o = JSON.parse(v); _cacheRoom[codigo] = o; return o; } }
+  catch(e){}
+  return null;
+}
+function escribirRoom(room){
+  _cacheRoom[room.codigo] = room;
+  try{ localStorage.setItem(claveRoom(room.codigo), JSON.stringify(room)); }catch(e){}
+  if(_usaServidor){
+    try{
+      fetch(urlRoom(room.codigo), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(room) });
+    }catch(e){}
+  }
+}
+function obtenerSala(codigo, cb){
+  var r = leerRoom(codigo);
+  if(r){ cb(r); return; }
+  if(_usaServidor){
+    fetch(urlRoom(codigo), { cache: "no-store" }).then(function(x){ return x.json(); }).then(function(room){
+      if(room){ _cacheRoom[codigo] = room; }
+      cb(room);
+    }).catch(function(){ cb(null); });
+  } else { cb(r); }
+}
+
+function roomVacia(){
+  return { codigo: 0, quiz: null, estado: "espera", preguntaActual: -1, inicioTs: 0, orden: [], stats: [], alumnos: {} };
+}
+
+function crearCodigo(){
+  var c = Math.floor(1000 + Math.random() * 9000);
+  while(leerRoom(String(c))){ c = Math.floor(1000 + Math.random() * 9000); }
+  return String(c);
+}
+
+function preguntaActual(room){
+  var q = room.quiz;
+  var i = room.preguntaActual;
+  var origen = room.orden && room.orden.length === q.preguntas.length ? room.orden[i] : i;
+  return q.preguntas[origen];
+}
+
+function escucharSala(cb){
+  var onStorage = function(e){
+    if(e.key === claveRoom(salaCode)){
+      var room = leerRoom(salaCode);
+      if(room){ cb(room); }
+    }
+  };
+  var iv = setInterval(function(){
+    if(_usaServidor){
+      fetch(urlRoom(salaCode), { cache: "no-store" }).then(function(x){ return x.json(); }).then(function(room){
+        if(room){ _cacheRoom[salaCode] = room; cb(room); }
+      }).catch(function(){});
+    } else {
+      var room = leerRoom(salaCode);
+      if(room){ cb(room); }
+    }
+  }, 800);
+  window.addEventListener("storage", onStorage);
+  var objeto = { iv: iv, fn: onStorage };
+  escuchasActivas.push(objeto);
+  return objeto;
+}
+
+function limpiarEscuchas(){
+  escuchasActivas.forEach(function(o){ clearInterval(o.iv); window.removeEventListener("storage", o.fn); });
+  escuchasActivas = [];
+}
+
+function borrarRoomDemo(codigo){ delete _cacheRoom[codigo]; try{ localStorage.removeItem(claveRoom(codigo)); }catch(e){} }
+
+/* ---------- PROFESOR: sala ---------- */
+function comenzarQuiz(i){
+  var lista = leerQuizzes();
+  var quiz = JSON.parse(JSON.stringify(lista[i]));
+  var codigo = crearCodigo();
+  var room = roomVacia();
+  room.codigo = codigo;
+  room.quiz = quiz;
+  room.orden = quiz.preguntas.map(function(_, k){ return k; });
+  if(quiz.aleatorio){
+    for(var x = room.orden.length - 1; x > 0; x--){
+      var y = Math.floor(Math.random() * (x + 1));
+      var tmp = room.orden[x]; room.orden[x] = room.orden[y]; room.orden[y] = tmp;
+    }
+  }
+  salaCode = codigo;
+  limpiarEscuchas();
+  escribirRoom(room);
+  $("profeSalaTitulo").textContent = quiz.nombre;
+  activar("pantallaProfeSala");
+  escucharSala(function(room){ renderProfeSala(room); });
+}
+
+function renderProfeSala(room){
+  var cont = $("profeSalaContenido");
+  if(room.estado === "espera"){
+    var n = Object.keys(room.alumnos).length;
+    cont.innerHTML = '' +
+      '<div class="aviso-sala">Comparte este código con tu clase</div>' +
+      '<div class="codigo-gigante">' + room.codigo + '</div>' +
+      '<div class="aviso-sala"><b>' + n + '</b> estudiante(s) esperando</div>' +
+      '<div id="listaJugadoresEspera"></div>' +
+      '<button class="btn btn-primario pulso" onclick="iniciarJuegoDemo()"' + (n === 0 ? ' disabled' : '') + '>Comenzar juego</button>' +
+      '<button class="btn btn-peligro" style="margin-top:10px" onclick="cerrarSalaProfe()">Cerrar sala</button>';
+    pintarJugadoresEspera(room);
+    return;
+  }
+  if(room.estado === "pregunta"){
+    var p = preguntaActual(room);
+    var nAns = 0;
+    Object.keys(room.alumnos).forEach(function(nombre){ if(room.alumnos[nombre].rta !== null && room.alumnos[nombre].rta !== undefined) nAns++; });
+    cont.innerHTML = '' +
+      '<div class="tarjeta-pregunta">' +
+        '<div class="numero">PREGUNTA ' + (room.preguntaActual + 1) + ' DE ' + room.quiz.preguntas.length + '</div>' +
+        '<h2>' + esc(p.pregunta) + '</h2>' +
+        '<div class="temporizador" id="tempProfe">' + restantesSeg(room) + '</div>' +
+      '</div>' +
+      '<div class="opciones" id="opcionesProfe"></div>' +
+      '<div class="contador-resp">' + nAns + ' de ' + Object.keys(room.alumnos).length + ' respondieron</div>' +
+      '<button class="btn btn-primario" onclick="revelarPregunta()">Revelar respuesta</button>';
+    pintarOpcionesProfe(room, p);
+    return;
+  }
+  if(room.estado === "revelada"){
+    var q = preguntaActual(room);
+    var opciones = '';
+    q.opciones.forEach(function(op, i){
+      var clase = i === q.correcta ? "opcion correcta" : "opcion";
+      var marca = i === q.correcta ? ' <span style="color:#3dff8b;font-weight:900">CORRECTA</span>' : "";
+      opciones += '<div class="opcion ' + clase + '"><span class="letra">' + letraDe(i) + '</span><span>' + esc(op) + '</span>' + marca + '</div>';
+    });
+    var ultimo = room.stats.length ? room.stats[room.stats.length - 1] : null;
+    var statBlock = "";
+    if(ultimo){
+      var pct = ultimo.respondidos ? Math.round(ultimo.aciertos / ultimo.respondidos * 100) : 0;
+      statBlock = '<div class="stat-resumen">Aciertos: <b>' + ultimo.aciertos + '</b> de ' + ultimo.respondidos + ' (' + pct + '%)</div>';
+    }
+    var fila = '';
+    Object.keys(room.alumnos).forEach(function(nombre){
+      var a = room.alumnos[nombre];
+      var marca = a.rta === q.correcta ? (a.ganado ? a.ganado + " pts" : "correcta") : "incorrecta";
+      fila += '<div class="jugador-ficha"><div class="fila-avatar">' + avatarHtml(a.color, nombre) + '<b>' + esc(nombre) + '</b></div>' +
+        '<small>' + marca + ' · total ' + (a.total || 0) + '</small></div>';
+    });
+    var esUltima = room.preguntaActual >= room.quiz.preguntas.length - 1;
+    cont.innerHTML = '' +
+      '<div class="tarjeta-pregunta"><div class="numero">RESPUESTA</div><h2>' + esc(q.pregunta) + '</h2>' + queryOpCode(opciones) + '</div>' +
+      statBlock +
+      '<div class="encabezado-seccion" style="margin-top:6px">Quién acertó</div>' + fila +
+      '<button class="btn btn-primario" style="margin-top:16px" onclick="' + (esUltima ? "verResultadosFinales()" : "siguientePregunta()") + '">' + (esUltima ? "Ver resultados" : "Siguiente pregunta") + '</button>';
+    return;
+  }
+  if(room.estado === "fin"){
+    cont.innerHTML = renderResultadosFinales(room);
+    return;
+  }
+}
+
+function queryOpCode(h){ return h; }
+
+function pintarJugadoresEspera(room){
+  var el = $("listaJugadoresEspera");
+  if(!el) return;
+  var html = "";
+  Object.keys(room.alumnos).forEach(function(nombre){
+    var a = room.alumnos[nombre];
+    html += '<div class="jugador-ficha"><div class="fila-avatar">' + avatarHtml(a.color, nombre) + '<b>' + esc(nombre) + '</b></div><small>Listo</small></div>';
+  });
+  el.innerHTML = html;
+}
+
+function pintarOpcionesProfe(room, p){
+  var el = $("opcionesProfe");
+  if(!el) return;
+  var html = "";
+  p.opciones.forEach(function(op, i){
+    var cuantos = 0;
+    Object.keys(room.alumnos).forEach(function(nombre){ if(room.alumnos[nombre].rta === i) cuantos++; });
+    html += '<div class="opcion"><span class="letra">' + letraDe(i) + '</span><span>' + esc(op) + '</span>' +
+      (cuantos > 0 ? '<div class="barra-respuesta">' + cuantos + '</div>' : '') + '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function iniciarJuegoDemo(){
+  var room = leerRoom(salaCode);
+  if(!room) return;
+  room.estado = "pregunta";
+  room.preguntaActual = 0;
+  room.inicioTs = Date.now();
+  room.stats = [];
+  resetearRespuestas(room);
+  escribirRoom(room);
+  sonInicio();
+  renderProfeSala(room);
+}
+
+function resetearRespuestas(room){
+  Object.keys(room.alumnos).forEach(function(nombre){
+    var a = room.alumnos[nombre];
+    a.rta = null; a.tMs = 0; a.ganado = 0;
+  });
+}
+
+function revelarPregunta(){
+  var room = leerRoom(salaCode);
+  if(!room) return;
+  var q = preguntaActual(room);
+  var seg = q.seg;
+  var porOpcion = q.opciones.map(function(){ return 0; });
+  var respondidos = 0, aciertos = 0;
+  Object.keys(room.alumnos).forEach(function(nombre){
+    var a = room.alumnos[nombre];
+    if(a.rta === null || a.rta === undefined) return;
+    respondidos++;
+    porOpcion[a.rta]++;
+    if(a.rta === q.correcta){
+      aciertos++;
+      a.aciertos = (a.aciertos || 0) + 1;
+      var t = Math.min(a.tMs || 0, seg * 1000);
+      var bonus = Math.max(0, Math.round(60 * (1 - t / (seg * 1000))));
+      a.ganado = 100 + bonus;
+    }else{
+      a.ganado = 0;
+    }
+    a.total = (a.total || 0) + a.ganado;
+  });
+  room.stats.push({ pregunta: q.pregunta, respondidos: respondidos, aciertos: aciertos, porOpcion: porOpcion });
+  room.estado = "revelada";
+  escribirRoom(room);
+  sonRevelado();
+  renderProfeSala(room);
+}
+
+function siguientePregunta(){
+  var room = leerRoom(salaCode);
+  if(!room) return;
+  if(room.preguntaActual >= room.quiz.preguntas.length - 1){ verResultadosFinales(); return; }
+  room.preguntaActual++;
+  room.estado = "pregunta";
+  room.inicioTs = Date.now();
+  resetearRespuestas(room);
+  escribirRoom(room);
+  renderProfeSala(room);
+}
+
+function verResultadosFinales(){
+  var room = leerRoom(salaCode);
+  if(!room) return;
+  guardarRankingEnFin(room);
+  room.estado = "fin";
+  escribirRoom(room);
+  sonFin();
+  lluviaConfetis();
+  renderProfeSala(room);
+}
+
+function guardarRankingEnFin(room){
+  var rank = leerRanking();
+  var arr = ordenarJugadores(room);
+  arr.forEach(function(j, i){
+    var r = rank[j.nombre] || { pts: 0, partidas: 0, primeros: 0, color: j.color };
+    r.pts = (r.pts || 0) + (j.total || 0);
+    r.partidas = (r.partidas || 0) + 1;
+    if(i === 0) r.primeros = (r.primeros || 0) + 1;
+    r.color = j.color || r.color;
+    rank[j.nombre] = r;
+  });
+  guardarRanking(rank);
+}
+
+function ordenarJugadores(room){
+  var arr = [];
+  Object.keys(room.alumnos).forEach(function(nombre){
+    var a = room.alumnos[nombre];
+    arr.push({ nombre: nombre, total: a.total || 0, aciertos: a.aciertos || 0, color: a.color });
+  });
+  arr.sort(function(a, b){ return b.total - a.total; });
+  return arr;
+}
+
+function renderResultadosFinales(room){
+  var arr = ordenarJugadores(room);
+  var tarjetas = "";
+  var podioHtml;
+  var podio = "";
+  for(var i = 0; i < Math.min(3, arr.length); i++){
+    podio += '<div class="puesto pos-' + (i+1) + '"><div class="pos">' + (i+1) + '</div>' + avatarHtml(arr[i].color, arr[i].nombre) + '<b>' + esc(arr[i].nombre) + '</b><small>' + arr[i].total + '</small></div>';
+  }
+  podio = podio ? '<div class="podio">' + podio + '</div>' : "";
+  var tab = "";
+  arr.forEach(function(j, i){
+    tab += '<tr><td>' + (i+1) + '. ' + avatarHtml(j.color, j.nombre) + ' <b>' + esc(j.nombre) + '</b></td><td class="r">' + (j.aciertos || 0) + ' aciertos · ' + j.total + ' pts</td></tr>';
+  });
+  var analisis = "";
+  if(room.stats.length){
+    analisis = '<div class="encabezado-seccion">Análisis por pregunta</div>';
+    room.stats.forEach(function(s, k){
+      var pct = s.respondidos ? Math.round(s.aciertos / s.respondidos * 100) : 0;
+      analisis += '<div class="tarjeta-resumen"><div class="t">' + (k+1) + '. ' + esc(s.pregunta) + '</div>' +
+        '<div style="font-size:12px;color:#8a8fb0">' + s.aciertos + ' aciertos de ' + s.respondidos + ' (' + pct + '%)</div>' +
+        '<div class="mini-barra"><div style="width:' + pct + '%"></div></div></div>';
+    });
+  }
+  return '' +
+    '<div class="saludo" style="font-size:22px">Resultados</div>' +
+    podio +
+    '<table class="tabla-resultados">' + tab + '</table>' +
+    analisis +
+    '<button class="btn btn-primario" style="margin-top:16px" onclick="rejugarQuiz()">Jugar de nuevo</button>' +
+    '<button class="btn btn-secundario" style="margin-top:10px" onclick="cerrarSalaProfe()">Cerrar sala</button>';
+}
+
+function rejugarQuiz(){
+  var room = leerRoom(salaCode);
+  if(!room) return;
+  Object.keys(room.alumnos).forEach(function(nombre){
+    var a = room.alumnos[nombre];
+    a.total = 0; a.aciertos = 0; a.rta = null; a.tMs = 0; a.ganado = 0;
+  });
+  room.estado = "espera";
+  room.preguntaActual = -1;
+  room.inicioTs = 0;
+  room.stats = [];
+  escribirRoom(room);
+  renderProfeSala(room);
+}
+
+function cerrarSalaProfe(){
+  borrarRoomDemo(salaCode);
+  limpiarEscuchas();
+  salaCode = null;
+  activar("pantallaProfeHome");
+  renderListaQuizzes();
+}
+
+/* ---------- ESTUDIANTE: sala ---------- */
+function unirseSala(){
+  sonClick();
+  var codigo = ($("alumnoCodigo").value || "").trim();
+  var apodo = ($("alumnoApodo").value || "").trim();
+  if(!/^\d{4}$/.test(codigo)){ toastMsg("El código son 4 números."); return; }
+  if(apodo.length < 2){ toastMsg("Escribe tu apodo."); return; }
+  obtenerSala(codigo, function(room){
+    if(!room){ toastMsg("Esa sala no existe."); return; }
+    if(room.estado === "fin"){ toastMsg("Ese quiz ya terminó."); return; }
+    if(room.alumnos[apodo]){ toastMsg("Ese apodo ya está en la sala."); return; }
+    if(Object.keys(room.alumnos).length >= 60){ toastMsg("La sala está llena."); return; }
+    room.alumnos[apodo] = { color: miColor, total: 0, aciertos: 0, rta: null, tMs: 0, ganado: 0 };
+    escribirRoom(room);
+    miApodo = apodo;
+    guardarPerfil({ apodo: apodo, color: miColor });
+    salaCode = codigo;
+    _ultimoEstadoAlumno = null;
+    limpiarEscuchas();
+    activar("pantallaAlumnoSala");
+    escucharSala(function(room){ renderAlumnoSala(room); });
+  });
+}
+
+function renderAlumnoSala(room){
+  var cont = $("alumnoSalaContenido");
+  var yo = room.alumnos[miApodo];
+  if(!yo){
+    cont.innerHTML = '<div class="avisos">Te sacaron de la sala.<br><button class="btn btn-secundario" style="margin-top:14px" onclick="salirATodo()">Volver</button></div>';
+    return;
+  }
+  if(room.estado === "espera"){
+    var n = Object.keys(room.alumnos).length;
+    cont.innerHTML = '' +
+      '<div class="avisos">Estás en la sala <b>' + room.codigo + '</b></div>' +
+      '<div class="base-avatar"><div class="avatar-grande" style="background:' + yo.color + '">' + esc(String(miApodo).charAt(0).toUpperCase()) + '</div></div>' +
+      '<div class="nombre-propio">' + esc(miApodo) + '</div>' +
+      '<div class="avisos" style="font-size:16px"><span class="pulso" style="display:inline-block">...</span> Espera a que el profe comience</div>' +
+      '<div class="avisos" style="font-size:13px">' + n + ' estudiante(s) en la sala</div>';
+    _ultimoEstadoAlumno = "espera";
+    return;
+  }
+  if(room.estado === "pregunta"){
+    var p = preguntaActual(room);
+    var respondio = yo.rta !== null && yo.rta !== undefined;
+    var opciones = "";
+    p.opciones.forEach(function(op, i){
+      var clase = "opcion";
+      var extra = "";
+      if(respondio){
+        clase = i === yo.rta ? "opcion seleccionada" : "opcion";
+        extra = i === yo.rta ? '<div class="barra-respuesta">elegida</div>' : '';
+      }
+      opciones += '<div class="' + clase + '" onclick="responder(' + i + ')"><span class="letra">' + letraDe(i) + '</span><span>' + esc(op) + '</span>' + extra + '</div>';
+    });
+    cont.innerHTML = '' +
+      '<div class="tarjeta-pregunta">' +
+        '<div class="numero">PREGUNTA ' + (room.preguntaActual + 1) + ' DE ' + room.quiz.preguntas.length + '</div>' +
+        '<h2>' + esc(p.pregunta) + '</h2>' +
+        '<div class="temporizador" id="tempAlumno">' + restantesSeg(room) + '</div>' +
+      '</div>' +
+      '<div class="opciones">' + opciones + '</div>' +
+      (respondio ? '<div class="contador-resp">Respuesta enviada — espera al profe</div>' : '<div class="contador-resp">Toca la opción que creas correcta</div>');
+    _ultimoEstadoAlumno = "pregunta";
+    return;
+  }
+  if(room.estado === "revelada"){
+    if(_ultimoEstadoAlumno !== "revelada"){
+      var acerto = yo.rta === preguntaActual(room).correcta;
+      if(acerto){ sonCorrecto(); }else{ sonError(); }
+    }
+    var q = preguntaActual(room);
+    var acerto2 = yo.rta === q.correcta;
+    var opciones = "";
+    q.opciones.forEach(function(op, i){
+      var clase = i === q.correcta ? "opcion correcta" : (i === yo.rta ? "opcion incorrecta" : "opcion");
+      opciones += '<div class="' + clase + '"><span class="letra">' + letraDe(i) + '</span><span>' + esc(op) + '</span></div>';
+    });
+    cont.innerHTML = '' +
+      '<div class="resultado-msg ' + (acerto2 ? "ok" : "error") + (acerto2 ? "" : " anim-sacudida") + '">' +
+        '<h2>' + (acerto2 ? "¡Correcto!" : "Casi") + '</h2>' +
+        '<div class="puntaje-grande">' + (yo.ganado || 0) + '<span style="font-size:18px;color:#b9bede"> pts</span></div>' +
+        '<div style="font-size:14px;color:#b9bede">Tu total: <b style="color:#ffd166">' + (yo.total || 0) + '</b></div>' +
+      '</div>' +
+      '<div class="opciones">' + opciones + '</div>' +
+      '<div class="avisos" style="font-size:14px">Esperando a que el profe continúe...</div>';
+    _ultimoEstadoAlumno = "revelada";
+    return;
+  }
+  if(room.estado === "fin"){
+    if(_ultimoEstadoAlumno !== "fin"){ sonFin(); lluviaConfetis(); }
+    var arr = ordenarJugadores(room);
+    var pos = 1;
+    arr.forEach(function(j, i){ if(j.nombre === miApodo) pos = i + 1; });
+    var podio = "";
+    for(var i = 0; i < Math.min(3, arr.length); i++){
+      podio += '<div class="puesto pos-' + (i+1) + '"><div class="pos">' + (i+1) + '</div>' + avatarHtml(arr[i].color, arr[i].nombre) + '<b>' + esc(arr[i].nombre) + '</b><small>' + arr[i].total + '</small></div>';
+    }
+    podio = podio ? '<div class="podio">' + podio + '</div>' : "";
+    var rank = leerRanking();
+    var miRank = rank[miApodo] || null;
+    var extraRank = "";
+    if(miRank){
+      var todos = Object.keys(rank).map(function(k){ return k; });
+      var posRank = 1;
+      var listaRank = Object.keys(rank).map(function(k){ return { nombre: k, pts: rank[k].pts || 0 }; }).sort(function(a, b){ return b.pts - a.pts; });
+      listaRank.forEach(function(j, ix){ if(j.nombre === miApodo) posRank = ix + 1; });
+      extraRank = '<div class="tarjeta-resumen"><div class="t">Tu récord en el ranking del colegio</div>' +
+        '<div style="font-size:12px;color:#8a8fb0">Puesto <b style="color:#ffd166">' + posRank + 'º</b> · ' + (miRank.pts || 0) + ' pts · ' + (miRank.partidas || 0) + ' partidas' + (miRank.primeros ? ' · ' + miRank.primeros + ' títulos' : '') + '</div></div>';
+    }
+    cont.innerHTML = '' +
+      '<div class="resultado-msg ok"><h2>Fin del quiz</h2>' +
+      '<div style="font-size:15px;margin-top:8px">Quedaste en el puesto <b style="font-size:22px;color:#ffd166">' + pos + 'º</b> con ' + (yo.total || 0) + ' pts</div></div>' +
+      podio +
+      extraRank +
+      '<button class="btn btn-secundario" onclick="salirATodo()">Salir</button>';
+    _ultimoEstadoAlumno = "fin";
+  }
+}
+
+function responder(opt){
+  var room = leerRoom(salaCode);
+  if(!room || room.estado !== "pregunta") return;
+  var yo = room.alumnos[miApodo];
+  if(!yo) return;
+  if(yo.rta !== null && yo.rta !== undefined) return;
+  if(Date.now() - room.inicioTs > preguntaActual(room).seg * 1000){
+    toastMsg("Se acabó el tiempo");
+    return;
+  }
+  yo.rta = opt;
+  yo.tMs = Date.now() - room.inicioTs;
+  escribirRoom(room);
+  sonClick();
+  renderAlumnoSala(room);
+}
+
+function restantesSeg(room){
+  if(room.estado !== "pregunta") return 0;
+  var p = preguntaActual(room);
+  var fin = room.inicioTs + p.seg * 1000;
+  return Math.max(0, Math.ceil((fin - Date.now()) / 1000));
+}
+
+setInterval(function(){
+  var room = null;
+  if(salaCode){ room = leerRoom(salaCode); }
+  if(!room || room.estado !== "pregunta"){ _ultimoTick = -1; return; }
+  var p = preguntaActual(room);
+  var segRest = restantesSeg(room);
+  var profesor = rolActual === "profe";
+  var el = profesor ? $("tempProfe") : $("tempAlumno");
+  if(el){
+    el.textContent = segRest;
+    el.classList.toggle("bajo", segRest <= p.seg * 0.3);
+  }
+  if(!profesor){
+    var yo = room.alumnos[miApodo];
+    var sinResponder = yo && (yo.rta === null || yo.rta === undefined);
+    if(sinResponder && segRest <= 3 && segRest >= 1 && segRest !== _ultimoTick){
+      _ultimoTick = segRest;
+      tonoTick();
+    }
+    if(sinResponder && segRest <= 0){
+      [].forEach.call(document.querySelectorAll("#alumnoSalaContenido .opcion"), function(oc){
+        oc.style.pointerEvents = "none"; oc.style.opacity = ".55";
+      });
+    }
+  }
+}, 200);
+
+$("alumnoApodo").addEventListener("input", actualizarVistaAvatar);
+
+fetch(_baseFirebase + ".json", { cache: "no-store" }).then(function(r){ if(r.ok){ _usaServidor = true; } }).catch(function(){});
+</script>
+</body>
+</html>
