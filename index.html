@@ -16,6 +16,7 @@
     background-image:radial-gradient(circle at 15% 0%,#3b1a5e33 0,transparent 45%),radial-gradient(circle at 85% 100%,#1a2b5e44 0,transparent 45%);
     -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
   }
+  input,textarea,.campo{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
   #marca{
     position:fixed;inset:0;z-index:9997;pointer-events:none;
     display:flex;align-items:center;justify-content:center;
@@ -32,6 +33,120 @@
     animation:parpadeo 1s infinite;
   }
   @keyframes parpadeo{0%,100%{opacity:1}50%{opacity:.55}}
+
+  /* ---------- FONDO ANIMADO DEL INICIO ---------- */
+  .fondo-anim{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .fondo-anim i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:deriva 15s ease-in-out infinite}
+  .fondo-anim i:nth-child(1){width:300px;height:300px;background:#a55bff;top:-70px;left:-60px}
+  .fondo-anim i:nth-child(2){width:260px;height:260px;background:#ff4d8d;bottom:-80px;right:-60px;animation-delay:-5s}
+  .fondo-anim i:nth-child(3){width:240px;height:240px;background:#4da6ff;top:35%;left:58%;animation-delay:-9s}
+  @keyframes deriva{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(34px,-44px) scale(1.18)}}
+  .titulo-grande{font-size:33px;font-weight:900;line-height:1.08;letter-spacing:-.6px;margin-bottom:10px}
+  .titulo-grande .grad{
+    background:linear-gradient(110deg,#ff4d8d,#ffd166,#3dff8b,#4da6ff,#a55bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    background-size:220% auto;animation:brilloGrad 7s linear infinite;
+  }
+  @keyframes brilloGrad{to{background-position:220% center}}
+  .pastilla-viva{
+    display:inline-flex;align-items:center;gap:7px;margin-bottom:14px;
+    background:#3dff8b1a;color:#3dff8b;border:1px solid #3dff8b55;
+    padding:5px 13px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:1.2px;
+  }
+  .pastilla-viva b{width:8px;height:8px;border-radius:50%;background:#3dff8b;box-shadow:0 0 10px #3dff8b;animation:respira 1.4s ease-in-out infinite}
+  .tarjeta-rol{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+  .tarjeta-rol:hover{transform:translateY(-7px) scale(1.02);box-shadow:0 22px 50px #00000066}
+  .tarjeta-rol .flecha{transition:transform .25s ease}
+  .tarjeta-rol:hover .flecha{transform:translateX(9px)}
+
+  /* ---------- LA IA BONITA ---------- */
+  #iaCargando{
+    position:fixed;inset:0;z-index:10000;display:none;
+    align-items:center;justify-content:center;flex-direction:column;gap:20px;padding:20px;
+    background:radial-gradient(circle at 50% 38%,#221248f7,#06050ffb);
+    backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  }
+  #iaCargando.visible{display:flex}
+  .ia-escena{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center}
+  .ia-halo{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#a55bff44,transparent 68%);animation:respira 2.4s ease-in-out infinite}
+  .ia-anillo{position:absolute;border-radius:50%;border:1px solid #ffffff22}
+  .ia-anillo.r1{width:198px;height:198px;border-top-color:#ff4d8d;border-right-color:#a55bff;animation:gira 6s linear infinite}
+  .ia-anillo.r2{width:156px;height:156px;border-top-color:#4da6ff;border-left-color:#3dff8b;animation:gira 4.4s linear infinite reverse}
+  .ia-nucleo{
+    position:relative;width:108px;height:104px;border-radius:36px;
+    background:linear-gradient(150deg,#ff4d8d,#a55bff 55%,#4da6ff);
+    box-shadow:0 0 44px #a55bff99,inset 0 -12px 26px #00000055;
+    display:flex;align-items:center;justify-content:center;gap:15px;
+    animation:flota 2.6s ease-in-out infinite;
+  }
+  .ia-ojo{width:17px;height:21px;border-radius:50%;background:#0d0f1a;box-shadow:0 0 12px #ffffff77;animation:guiña 3.4s infinite}
+  .ia-ojo.d{animation-delay:.14s}
+  .ia-boca{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:26px;height:11px;border-bottom:4px solid #0d0f1a;border-radius:0 0 20px 20px;opacity:.75}
+  .ia-antena{position:absolute;top:-24px;left:50%;transform:translateX(-50%);width:4px;height:26px;border-radius:4px;background:linear-gradient(#ffd166,#ff4d8d)}
+  .ia-bola{position:absolute;top:-32px;left:50%;margin-left:-8px;width:16px;height:16px;border-radius:50%;background:#ff4d8d;box-shadow:0 0 20px #ff4d8d;animation:brilla 1.5s ease-in-out infinite}
+  .ia-chispas i{position:absolute;width:6px;height:6px;border-radius:50%;background:#ffd166;box-shadow:0 0 10px #ffd166;animation:suben 2.4s linear infinite}
+  .ia-chispas i:nth-child(1){left:6%;animation-delay:0s}
+  .ia-chispas i:nth-child(2){right:4%;animation-delay:.8s;background:#4da6ff;box-shadow:0 0 10px #4da6ff}
+  .ia-chispas i:nth-child(3){left:14%;animation-delay:1.6s;background:#3dff8b;box-shadow:0 0 10px #3dff8b}
+  @keyframes gira{to{transform:rotate(360deg)}}
+  @keyframes flota{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+  @keyframes guiña{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.12)}}
+  @keyframes brilla{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.35);opacity:.7}}
+  @keyframes respira{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.12);opacity:1}}
+  @keyframes suben{0%{transform:translateY(20px) scale(.4);opacity:0}25%{opacity:1}100%{transform:translateY(-70px) scale(1.1);opacity:0}}
+  .ia-texto{font-size:17px;font-weight:800;color:#fff;text-align:center;min-height:26px;letter-spacing:.3px}
+  .ia-sub{font-size:13px;color:#b9bede;text-align:center;max-width:320px;line-height:1.5}
+  .brillo-barra{width:250px;max-width:70vw;height:7px;border-radius:99px;background:#ffffff1a;overflow:hidden;margin-top:4px}
+  .brillo-barra i{display:block;height:100%;width:38%;border-radius:99px;background:linear-gradient(90deg,#ff4d8d,#a55bff,#4da6ff,#3dff8b);animation:avanza 1.5s ease-in-out infinite}
+  @keyframes avanza{0%{transform:translateX(-110%)}100%{transform:translateX(320%)}}
+  .ia-mini{display:flex;align-items:center;gap:12px;background:linear-gradient(120deg,#1d1133,#141a33);border:1px solid #a55bff44;border-radius:16px;padding:10px 12px;margin-bottom:12px}
+  .ia-mini .cara{width:40px;height:40px;border-radius:14px;background:linear-gradient(150deg,#ff4d8d,#a55bff 60%,#4da6ff);display:flex;align-items:center;justify-content:center;gap:5px;box-shadow:0 0 20px #a55bff77;flex:0 0 auto}
+  .ia-mini .cara span{width:6px;height:9px;border-radius:50%;background:#0d0f1a;animation:guiña 3.4s infinite}
+  .ia-mini .cara span:last-child{animation-delay:.14s}
+  .ia-mini .txt b{display:block;font-size:14px}
+  .ia-mini .txt small{color:#b9bede;font-size:12px}
+  .ia-pensando{display:inline-flex;gap:4px;align-items:center;vertical-align:middle}
+  .ia-pensando i{width:6px;height:6px;border-radius:50%;background:#a55bff;animation:salta 1s infinite}
+  .ia-pensando i:nth-child(2){animation-delay:.15s}
+  .ia-pensando i:nth-child(3){animation-delay:.3s}
+  @keyframes salta{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(-5px);opacity:1}}
+  .explicacion{
+    margin-top:14px;padding:14px 16px;border-radius:16px;
+    background:linear-gradient(140deg,#1d2b1f,#152034);
+    border:1px solid #3dff8b44;font-size:14px;line-height:1.5;
+  }
+  .explicacion b{color:#3dff8b;display:block;margin-bottom:5px;font-size:13px;letter-spacing:.3px}
+  .explicacion p{margin:0;color:#e8ecff}
+  .btn-leer{
+    margin-top:10px;background:#ffffff12;border:1px solid #ffffff2e;color:#e8ecff;
+    padding:8px 14px;border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;
+  }
+  .btn-leer:active{transform:scale(.96)}
+  .informe-ia{
+    margin-top:14px;padding:16px;border-radius:16px;white-space:pre-wrap;
+    background:#12142b;border:1px solid #a55bff55;font-size:14px;line-height:1.6;color:#e8ecff;
+  }
+  .aviso-revision{
+    margin-top:8px;padding:11px 13px;border-radius:13px;font-size:13.5px;line-height:1.5;
+    background:#3dff8b14;border:1px solid #3dff8b44;
+  }
+  .aviso-revision.mal{background:#ff4d8d14;border-color:#ff4d8d55}
+  .aviso-revision b{color:#ffd166}
+  .barra-fotos{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  input[type=file].oculto{display:none}
+  .perfil-ia{background:linear-gradient(140deg,#1b1330,#141a33);border:1px solid #ffffff18;border-radius:16px;padding:14px;margin-bottom:14px}
+  .perfil-ia .resumen-linea{display:flex;align-items:center;gap:10px;font-size:13px;color:#e8ecff;line-height:1.5}
+  .perfil-ia .resumen-linea b{color:#ffd166}
+  .perfil-ia .cambiar{margin-left:auto;background:#ffffff14;border:1px solid #ffffff2e;color:#e8ecff;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer}
+  .distribucion{margin-top:12px;background:#12142b;border:1px solid #ffffff14;border-radius:14px;padding:12px}
+  .dist-titulo{font-size:12px;color:#8a8fb0;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px}
+  .dist-fila{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:13px;color:#cfd3ff;border-top:1px solid #ffffff0f}
+  .dist-fila .letra{flex:0 0 24px;height:24px;display:flex;align-items:center;justify-content:center;background:#ffffff14;border-radius:8px;font-weight:800;font-size:12px}
+  .dist-fila .dist-op{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dist-fila .dist-n{font-weight:900;color:#fff}
+  .dist-fila.ok{color:#3dff8b}
+  .dist-fila.ok .letra{background:#3dff8b22;border:1px solid #3dff8b66}
+  .dist-fila.ok .dist-n{color:#3dff8b}
   .barra{
     display:flex;align-items:center;justify-content:space-between;
     padding:14px 18px;border-bottom:1px solid #ffffff14;
@@ -188,8 +303,8 @@
 
 <div id="pantallaInicio" class="pantalla activa">
   <div class="hero">
-    <div class="badge-demo">MODO DEMO</div>
-    <div class="saludo">La clase que <span class="grad">todos</span> quieren jugar</div>
+    <div class="pastilla-viva"><b></b> EN VIVO · CLASES CON IA</div>
+    <div class="titulo-grande">La clase que <span class="grad">todos</span> quieren jugar</div>
     <div class="subtitulo">Quizzes en vivo, gratuitos y en español. Para toda tu clase, para todo tu colegio.</div>
     <div class="fila-stats">
       <div class="stat"><b>100%</b><small>Gratis</small></div>
@@ -246,6 +361,15 @@
   <div class="pregunta-editor" style="border-color:#a55bff44">
     <div class="num">GENERAR CON IA (OPCIONAL)</div>
     <div class="campo">
+      <label>Personalidad de Nia (cómo responde)</label>
+      <select id="iaPersonalidad" class="select" onchange="guardarPersonalidadIA(this.value)">
+        <option value="directa">Directa — clara y al grano</option>
+        <option value="socratica">Socrática — da pistas, no respuestas</option>
+        <option value="divertida">Divertida — cercana y con humor</option>
+        <option value="formal">Formal — como consultor educativo</option>
+      </select>
+    </div>
+    <div class="campo">
       <label>Qué quieres que cree la IA (pide lo que sea)</label>
       <input id="iaTema" placeholder="Ej: 10 preguntas de química, grado 9, poniendo fórmulas de elementos">
     </div>
@@ -264,6 +388,13 @@
       </div>
     </div>
     <button class="btn btn-primario" onclick="generarQuizConIA()">Generar quiz con IA</button>
+    <button class="btn btn-secundario" style="margin-top:8px" onclick="revisarQuizConIA()">Revisar mis preguntas con IA</button>
+    <div class="barra-fotos">
+      <button class="btn btn-secundario" style="flex:1 1 100%" onclick="elegirFoto()">Crear preguntas desde una foto del libro</button>
+      <input type="file" id="fotoLibro" class="oculto" accept="image/*" capture="environment" onchange="generarDesdeFoto()">
+      <input id="fotoCant" inputmode="numeric" value="5" style="width:70px;padding:10px 12px;border-radius:12px;background:#0f1120;border:1px solid #ffffff22;color:#fff" title="¿Cuántas preguntas quieres?">
+    </div>
+    <div id="revisionIA"></div>
     <div style="font-size:12px;color:#8a8fb0;margin-top:10px;line-height:1.5">La IA crea las preguntas aquí; tú las revisas antes de guardar. Necesita llave gratuita de Google (una sola vez). <a href="#" onclick="configurarLlaveIA();return false" style="color:#a55bff">Configurar llave</a> · <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#a55bff">Conseguir llave</a></div>
     <div id="iaUsoInfo" style="font-size:12px;color:#3dff8b;margin-top:10px;font-weight:700"></div>
   </div>
@@ -283,11 +414,40 @@
 <div id="pantallaProfeChat" class="pantalla">
   <div class="saludo" style="font-size:22px">Asesor IA del profe</div>
   <div class="subtitulo">Pregúntale lo que necesites para tu clase: redactar, explicar, sugerir distractores...</div>
-  <div id="chatCaja" style="max-height:50vh;overflow-y:auto;background:#12142b;border:1px solid #ffffff14;border-radius:14px;padding:10px;margin-bottom:12px"></div>
+  <div class="ia-mini">
+    <div class="cara"><span></span><span></span></div>
+    <div class="txt"><b>Nia · tu asistente IA</b><small id="iaEstadoChat">Lista para ayudarte con tu clase</small></div>
+  </div>
+  <div class="perfil-ia" id="perfilIA">
+    <div id="perfilFormulario">
+      <div style="font-size:13px;color:#cfd3ff;margin-bottom:9px;line-height:1.5">Para conocerte mejor y llamarte por tu nombre, escríbelo una vez. Nia lo recuerda para siempre en este navegador.</div>
+      <div class="campo" style="margin-bottom:8px"><label>Tu nombre</label><input id="perfilNombre" placeholder="Ej: Hayde"></div>
+      <div style="display:flex;gap:10px">
+        <div class="campo" style="flex:1;margin-bottom:8px"><label>Materia</label><input id="perfilMateria" placeholder="Ej: Química"></div>
+        <div class="campo" style="flex:1;margin-bottom:8px"><label>Grado</label><input id="perfilGrado" placeholder="Ej: 9°"></div>
+      </div>
+      <button class="btn btn-primario" style="width:100%" onclick="guardarPerfilProfe()">Guardar y que Nia me conozca</button>
+    </div>
+    <div id="perfilResumen" style="display:none"></div>
+  </div>
+  <div class="campo" style="margin-bottom:12px">
+    <label>Personalidad de Nia</label>
+    <select id="iaPersonalidadChat" class="select" onchange="guardarPersonalidadIA(this.value)">
+      <option value="directa">Directa — clara y al grano</option>
+      <option value="socratica">Socrática — da pistas, no respuestas</option>
+      <option value="divertida">Divertida — cercana y con humor</option>
+      <option value="formal">Formal — como consultor educativo</option>
+    </select>
+  </div>
+  <div class="barra-fotos" style="margin-bottom:10px">
+    <button class="btn-leer" style="flex:1 1 auto" onclick="alternarVozIA()">🔊 Leer en voz alta: <span id="vozIAEstado">no</span></button>
+  </div>
+  <div id="chatCaja" style="max-height:46vh;overflow-y:auto;background:#12142b;border:1px solid #ffffff14;border-radius:14px;padding:10px;margin-bottom:12px"></div>
   <div style="display:flex;gap:10px">
     <div class="campo" style="flex:1;margin-bottom:0">
       <input id="chatEntrada" placeholder="Ej: Hazme 3 distractores creíbles para la pregunta sobre los elementos químicos">
     </div>
+    <button id="btnMicro" class="btn btn-secundario" style="width:auto;padding:13px 16px" onclick="hablarConNia()" title="Hablarle a Nia con la voz">🎤</button>
     <button id="btnEnviarChat" class="btn btn-primario" style="width:auto;padding:13px 22px" onclick="enviarChat()">Enviar</button>
   </div>
   <button class="btn btn-secundario" style="margin-top:12px" onclick="volverChat()">Volver</button>
@@ -315,6 +475,25 @@
 
 <div id="pantallaAlumnoSala" class="pantalla">
   <div id="alumnoSalaContenido"></div>
+</div>
+
+<div id="iaCargando">
+  <div class="ia-escena">
+    <div class="ia-halo"></div>
+    <div class="ia-anillo r1"></div>
+    <div class="ia-anillo r2"></div>
+    <div class="ia-chispas"><i></i><i></i><i></i></div>
+    <div class="ia-nucleo">
+      <div class="ia-antena"></div>
+      <div class="ia-bola"></div>
+      <div class="ia-ojo"></div>
+      <div class="ia-ojo d"></div>
+      <div class="ia-boca"></div>
+    </div>
+  </div>
+  <div class="ia-texto" id="iaCargandoTexto">Pensando…</div>
+  <div class="ia-sub">Nia está preparando lo que pediste. Esto toma unos segundos.</div>
+  <div class="brillo-barra"><i></i></div>
 </div>
 
 <script>
@@ -608,6 +787,8 @@ function preguntaEditadaHTML(idx){
     '<div class="campo"><label>Texto de la pregunta</label><input id="qe_p_t' + idx + '" value="' + esc(p.pregunta) + '" placeholder="Ej: ¿Cuál es la capital de Colombia?"></div>' +
     opcionesHTML +
     '<div class="campo"><label>Tiempo (segundos)</label><input id="qe_p_s' + idx + '" inputmode="numeric" value="' + p.seg + '"></div>' +
+    '<div class="campo"><label>Explicación de la respuesta (opcional)</label><input id="qe_p_e' + idx + '" value="' + esc(p.explica || "") + '" placeholder="Por qué esa es la correcta (la verá el estudiante)">' +
+    '<button class="btn btn-secundario" style="padding:9px;font-size:12px;margin-top:8px" onclick="explicarPreguntaIA(' + idx + ')">Explicar con IA</button></div>' +
     '<button class="btn btn-secundario" style="padding:10px;font-size:13px;margin-bottom:8px" onclick="mejorarPreguntaIA(' + idx + ')">Mejorar esta pregunta con IA</button>' +
     '<button class="btn btn-peligro" style="padding:10px;font-size:13px" onclick="quitarPreguntaEditor(' + idx + ')">Eliminar pregunta</button></div>';
 }
@@ -619,7 +800,7 @@ function esc(t){
 function letraDe(i){ return ["A","B","C","D"][i] || String.fromCharCode(65 + i); }
 
 function nuevaPregunta(){
-  return { pregunta: "", opciones: ["","","",""], correcta: 0, seg: 20, tipo: "multi" };
+  return { pregunta: "", opciones: ["","","",""], correcta: 0, seg: 20, tipo: "multi", explica: "" };
 }
 
 function abrirEditorQuiz(){
@@ -686,7 +867,7 @@ function leerValoresEditor(){
         opciones.push(($("qe_p_o" + i + "_" + idx) ? $("qe_p_o" + i + "_" + idx).value : "").trim());
       }
     }
-    preguntas.push({ pregunta: texto, opciones: opciones, correcta: quizEditando.preguntas[idx].correcta, seg: Math.min(120, Math.max(5, seg)), tipo: tipo });
+    preguntas.push({ pregunta: texto, opciones: opciones, correcta: quizEditando.preguntas[idx].correcta, seg: Math.min(120, Math.max(5, seg)), tipo: tipo, explica: (($("qe_p_e" + idx) ? $("qe_p_e" + idx).value : quizEditando.preguntas[idx].explica) || "").trim() });
   });
   return { nombre: nombre, preguntas: preguntas, aleatorio: !!$("quizAleatorio").checked };
 }
@@ -741,6 +922,111 @@ function pintarUsoIA(){
 function leerLlaveIA(){ try{ return localStorage.getItem("ce_genai_key") || ""; }catch(e){ return ""; } }
 function guardarLlaveIA(k){ try{ localStorage.setItem("ce_genai_key", k); }catch(e){} }
 
+/* ---------- #3 PERSONALIDADES DE NIA ---------- */
+var _PERSONAS_IA = {
+  directa: "directa",
+  socratica: "socratica",
+  divertida: "divertida",
+  formal: "formal"
+};
+var _REGLAS_PERSONA = {
+  directa: "Personalidad directa: responde claro, al grano, sin rodeos, como una colega experta.",
+  socratica: "Personalidad socratica: no das la respuesta de una vez. En su lugar haces preguntas que lleven al profesor a encontrarla, y das pistas graduales solo si vuelve a preguntar.",
+  divertida: "Personalidad divertida: tono cercano y alegre, con un toque de humor y emojis con moderacion, para que la clase se sienta divertida y memorable.",
+  formal: "Personalidad formal: registro academico y profesional, como un consultor educativo. Preciso, respetuoso y bien estructurado."
+};
+function leerPersonalidadIA(){
+  var v = "";
+  try{ v = localStorage.getItem("ce_personalidad_ia") || ""; }catch(e){}
+  if(!_PERSONAS_IA[v]) v = "directa";
+  var sel = $("iaPersonalidad");
+  if(sel && sel.value !== v){ sel.value = v; }
+  var sel2 = $("iaPersonalidadChat");
+  if(sel2 && sel2.value !== v){ sel2.value = v; }
+  return v;
+}
+
+/* ---------- NIA CONOCE A LA PROFESORA ---------- */
+function leerPerfilProfe(){
+  var p = { nombre: "", materia: "", grado: "", colegio: "" };
+  try{
+    var v = JSON.parse(localStorage.getItem("ce_profe_perfil") || "{}");
+    if(v && typeof v === "object"){
+      p.nombre = String(v.nombre || "").trim();
+      p.materia = String(v.materia || "").trim();
+      p.grado = String(v.grado || "").trim();
+      p.colegio = String(v.colegio || "").trim();
+    }
+  }catch(e){}
+  return p;
+}
+function guardarPerfilProfe(){
+  var nombre = (($("perfilNombre") ? $("perfilNombre").value : "") || "").trim();
+  if(nombre.length < 2){ toastMsg("Escribe tu nombre para que Nia te conozca."); return; }
+  var perfil = {
+    nombre: nombre,
+    materia: (($("perfilMateria") ? $("perfilMateria").value : "") || "").trim(),
+    grado: (($("perfilGrado") ? $("perfilGrado").value : "") || "").trim(),
+    colegio: leerPerfilProfe().colegio || ""
+  };
+  try{ localStorage.setItem("ce_profe_perfil", JSON.stringify(perfil)); }catch(e){}
+  pintarPerfilIA();
+  estadoChatIA("Ya te conozco, profe " + nombre);
+  toastMsg("Listo, profe " + nombre + ". Nia te va a llamar por tu nombre.");
+}
+function editarPerfilProfe(){
+  var f = $("perfilFormulario");
+  var r = $("perfilResumen");
+  if(f) f.style.display = "";
+  if(r) r.style.display = "none";
+}
+function pintarPerfilIA(){
+  var p = leerPerfilProfe();
+  var f = $("perfilFormulario");
+  var r = $("perfilResumen");
+  if(!f || !r) return;
+  var n = $("perfilNombre"); if(n) n.value = p.nombre;
+  var m = $("perfilMateria"); if(m) m.value = p.materia;
+  var g = $("perfilGrado"); if(g) g.value = p.grado;
+  if(p.nombre.length >= 2){
+    f.style.display = "none";
+    r.style.display = "";
+    r.innerHTML = '<div class="resumen-linea">Nia ya te conoce como <b>profe ' + esc(p.nombre) + '</b>' +
+      (p.materia || p.grado ? " · " + esc((p.materia || "") + (p.materia && p.grado ? " · " : "") + (p.grado ? "grado " + formatearGrado(p.grado) : "")) : "") +
+      '<button class="cambiar" onclick="editarPerfilProfe()">Cambiar</button></div>';
+  }else{
+    f.style.display = "";
+    r.style.display = "none";
+  }
+}
+function formatearGrado(v){
+  var g = String(v || "").trim();
+  if(!g) return "";
+  if(/^\d{1,2}$/.test(g)) return g + "°";
+  return g;
+}
+function contextoProfeIA(){
+  var p = leerPerfilProfe();
+  if(!p.nombre) return "";
+  var t = "Datos de la profesora: se llama " + p.nombre + ".";
+  if(p.materia) t += " Da la materia de " + p.materia + ".";
+  if(p.grado) t += " Es profesora del GRADO " + formatearGrado(p.grado) + " (es decir, la edad de sus estudiantes NO viene al caso, el número es el grado del colegio).";
+  t += " Trátala por su nombre con naturalidad (salúdala una vez al inicio de la conversación, no en cada mensaje).";
+  return t;
+}
+function saludoProfeIA(){
+  var p = leerPerfilProfe();
+  return p.nombre ? "¡Hola profe " + p.nombre + "! Dime en qué te ayudo hoy." : "Hola, ¿en qué te ayudo hoy?";
+}
+function guardarPersonalidadIA(v){
+  if(!_PERSONAS_IA[v]) v = "directa";
+  try{ localStorage.setItem("ce_personalidad_ia", v); }catch(e){}
+  var e = $("iaEstadoChat");
+  if(e) e.textContent = "Modo " + v + " activado";
+  toastMsg("Nia ahora habla en modo " + v + ".");
+}
+function reglaPersonalidadIA(){ return _REGLAS_PERSONA[leerPersonalidadIA()] || _REGLAS_PERSONA.directa; }
+
 function configurarLlaveIA(){
   var actual = leerLlaveIA();
   var nueva = prompt("Pega tu llave gratuita de Google (Gemini).\nSe guarda solo en este navegador.\nPara conseguirla entra a: aistudio.google.com/apikey\n\n" + (actual ? "Llave actual: " + actual.slice(0, 5) + "..." : "Aún no tienes llave guardada."), actual);
@@ -749,18 +1035,53 @@ function configurarLlaveIA(){
   toastMsg("Llave guardada");
 }
 
-function pedirAIA(texto, alListo, alError, boton, jsonMode){
+var _iaFrases = ["Pensando…", "Consultando lo que sabes…", "Armando las preguntas…", "Revisando que todo tenga sentido…", "¡Casi listo!"];
+var _iaTimer = null;
+var _iaIndice = 0;
+function mostrarIACargando(){
+  var v = $("iaCargando");
+  if(!v) return;
+  v.classList.add("visible");
+  _iaIndice = 0;
+  var t = $("iaCargandoTexto");
+  if(t) t.textContent = _iaFrases[0];
+  if(_iaTimer) clearInterval(_iaTimer);
+  _iaTimer = setInterval(function(){
+    var el = $("iaCargandoTexto");
+    if(!el) return;
+    _iaIndice = (_iaIndice + 1) % _iaFrases.length;
+    el.textContent = _iaFrases[_iaIndice];
+  }, 1700);
+}
+function ocultarIACargando(){
+  var v = $("iaCargando");
+  if(v) v.classList.remove("visible");
+  if(_iaTimer){ clearInterval(_iaTimer); _iaTimer = null; }
+}
+function estadoChatIA(texto){ var e = $("iaEstadoChat"); if(e) e.textContent = texto; }
+
+function pedirAIA(texto, alListo, alError, boton, jsonMode, animacion, imagen){
   var llave = leerLlaveIA();
   if(!llave){
     configurarLlaveIA();
     llave = leerLlaveIA();
   }
   if(!llave){ alError("Necesitas configurar la llave gratuita de Google."); return; }
+  var _listo = alListo;
+  var _err = alError;
+  alListo = function(txt){ ocultarIACargando(); _listo(txt); };
+  alError = function(m){ ocultarIACargando(); _err(m); };
+  if(animacion){ mostrarIACargando(); }
   var generacion = { temperature: 0.5 };
   if(jsonMode){ generacion.responseMimeType = "application/json"; }
+  var partes = [];
+  if(imagen && imagen.base64){
+    partes.push({ inline_data: { mime_type: imagen.mime || "image/jpeg", data: imagen.base64 } });
+  }
+  partes.push({ text: texto });
   var cuerpo = {
-    systemInstruction: { parts: [{ text: "Eres un asistente experto de profesores escolares en español. Claro, útil y apropiado para el aula. Si te piden JSON, respondes SOLO con JSON válido." }] },
-    contents: [{ role: "user", parts: [{ text: texto }] }],
+    systemInstruction: { parts: [{ text: "Eres un asistente experto de profesores escolares en español. Claro, útil y apropiado para el aula. Si te piden JSON, respondes SOLO con JSON válido. " + reglaPersonalidadIA() + " " + contextoProfeIA() }] },
+    contents: [{ role: "user", parts: partes }],
     generationConfig: generacion
   };
   var lanzar = function(modelInd, reint){
@@ -820,7 +1141,7 @@ function generarQuizConIA(){
   var boton = null;
   [].forEach.call(document.querySelectorAll("button"), function(b){ if(b.textContent.indexOf("Generar quiz con IA") >= 0) boton = b; });
   if(boton){ boton.disabled = true; boton.textContent = "Generando..."; }
-  var texto = "Un profesor te pide esto para su clase: \"" + pedido + "\". Crea un quiz de opción múltiple a partir de ese pedido, apropiado para el aula. Si el pedido no dice cuántas preguntas, haz " + cant + ". Dificultad aproximada: " + dif + ". Cada pregunta tiene 4 opciones y solo una correcta. Lenguaje apropiado para el aula, preguntas variadas y sin repetir formato. Responde SOLO con JSON válido, sin texto adicional, con esta estructura exacta: {\"preguntas\":[{\"pregunta\":\"...\",\"opciones\":[\"A\",\"B\",\"C\",\"D\"],\"correcta\":2,\"seg\":20}]}. correcta es el índice (0 a 3) de la opción correcta. seg entre 10 y 30.";
+  var texto = "Un profesor te pide esto para su clase: \"" + pedido + "\". Crea un quiz de opción múltiple a partir de ese pedido, apropiado para el aula. Si el pedido no dice cuántas preguntas, haz " + cant + ". Dificultad aproximada: " + dif + ". Cada pregunta tiene 4 opciones y solo una correcta. Además, en cada pregunta agrega \"explica\": una sola frase breve (máximo 25 palabras) que le diga al estudiante por qué esa es la respuesta correcta. Lenguaje apropiado para el aula, preguntas variadas y sin repetir formato. Responde SOLO con JSON válido, sin texto adicional, con esta estructura exacta: {\"preguntas\":[{\"pregunta\":\"...\",\"opciones\":[\"A\",\"B\",\"C\",\"D\"],\"correcta\":2,\"seg\":20,\"explica\":\"...\"}]}. correcta es el índice (0 a 3) de la opción correcta. seg entre 10 y 30.";
   pedirAIA(texto, function(txt){
     var estructura = null;
     try{
@@ -849,7 +1170,8 @@ function generarQuizConIA(){
         opciones: opciones,
         correcta: correcta,
         seg: Math.min(30, Math.max(10, parseInt(pp.seg, 10) || 20)),
-        tipo: esVF ? "vf" : "multi"
+        tipo: esVF ? "vf" : "multi",
+        explica: pp.explica ? String(pp.explica) : ""
       });
     });
     if(!preguntas.length){ terminarGenerar(boton, "La IA no creó preguntas. Ajusta el pedido y vuelve a intentar."); return; }
@@ -859,7 +1181,7 @@ function generarQuizConIA(){
     pintarUsoIA();
     pintarEditor();
     terminarGenerar(boton, "Listo: " + preguntas.length + " preguntas generadas. Revísalas y guarda.");
-  }, function(msg){ terminarGenerar(boton, msg); }, boton, true);
+  }, function(msg){ terminarGenerar(boton, msg); }, boton, true, true);
 }
 
 function mejorarPreguntaIA(idx){
@@ -911,7 +1233,136 @@ function mejorarPreguntaIA(idx){
   }, function(msg){
     if(boton){ boton.disabled = false; boton.textContent = "Mejorar esta pregunta con IA"; }
     toastMsg(msg);
-  }, boton, true);
+  }, boton, true, true);
+}
+
+/* ---------- #6 CREAR PREGUNTAS DESDE UNA FOTO ---------- */
+function elegirFoto(){
+  var f = $("fotoLibro");
+  if(!f){ toastMsg("Abre el editor de un quiz para usar esta opción."); return; }
+  f.value = "";
+  f.click();
+}
+
+function generarDesdeFoto(){
+  var f = $("fotoLibro");
+  if(!f || !f.files || !f.files[0]) return;
+  var archivo = f.files[0];
+  if(archivo.size > 4.5 * 1024 * 1024){ toastMsg("La foto está muy pesada (máx 4 MB). Tómala con menos resolución."); f.value = ""; return; }
+  if(usoIAHoy().n >= limiteDiarioIA){ toastMsg("Ya usaste las " + limiteDiarioIA + " acciones de IA de hoy. Vuelve mañana."); f.value = ""; return; }
+  var cant = Math.min(15, Math.max(2, parseInt(($("fotoCant") ? $("fotoCant").value : "5"), 10) || 5));
+  var lector = new FileReader();
+  lector.onload = function(){
+    var dataUrl = String(lector.result || "");
+    var coma = dataUrl.indexOf(",");
+    if(coma < 0){ toastMsg("No pude leer la foto. Intenta otra."); f.value = ""; return; }
+    var base64 = dataUrl.slice(coma + 1);
+    var mime = (dataUrl.match(/^data:([^;]+)/) || [])[1] || "image/jpeg";
+    var texto = "Esta es la foto de una página de un libro, taller o guía escolar que un profesor fotografió. Lee el contenido de la imagen y crea " + cant +
+      " preguntas de opción múltiple sobre EXACTAMENTE ese contenido. Cada pregunta con 4 opciones y solo una correcta, y en cada una agrega \"explica\": una frase breve que explique por qué esa es la respuesta. Si el texto de la imagen no es claro, crea preguntas sobre lo que sí se lea. Responde SOLO con JSON válido, sin texto adicional, con esta estructura exacta: {\"preguntas\":[{\"pregunta\":\"...\",\"opciones\":[\"A\",\"B\",\"C\",\"D\"],\"correcta\":1,\"seg\":20,\"explica\":\"...\"}]}. seg entre 15 y 30.";
+    pedirAIA(texto, function(txt){
+      var estructura = null;
+      try{
+        var ini = txt.indexOf("{"); var fin = txt.lastIndexOf("}");
+        estructura = JSON.parse(ini >= 0 ? txt.slice(ini, fin + 1) : txt);
+      }catch(e){ toastMsg("La IA respondió algo raro con la foto. Vuelve a intentar."); f.value = ""; return; }
+      var preguntas = [];
+      var lista = (estructura && estructura.preguntas) || [];
+      if(!Array.isArray(lista)) lista = [lista];
+      lista.forEach(function(pp){
+        if(!pp || !pp.pregunta || !Array.isArray(pp.opciones)) return;
+        var opciones = pp.opciones.map(function(o){ return String(o); }).filter(function(o){ return o; });
+        if(opciones.length < 2) return;
+        var correcta = pp.correcta;
+        if(typeof correcta === "string"){ correcta = "ABCD".indexOf(String(correcta).toUpperCase()); }
+        correcta = parseInt(correcta, 10);
+        if(isNaN(correcta) || correcta < 0 || correcta >= opciones.length) correcta = 0;
+        while(opciones.length < 4){ opciones.push(opciones.length < 3 ? "Opción " + "ABCD"[opciones.length] : "Opción D"); }
+        preguntas.push({
+          pregunta: String(pp.pregunta),
+          opciones: opciones,
+          correcta: correcta,
+          seg: Math.min(30, Math.max(15, parseInt(pp.seg, 10) || 20)),
+          tipo: "multi",
+          explica: pp.explica ? String(pp.explica) : ""
+        });
+      });
+      if(!preguntas.length){ toastMsg("No logré crear preguntas con esa foto. Prueba con una foto más nítida."); f.value = ""; return; }
+      quizEditando.preguntas = preguntas;
+      if(!$("quizNombre").value.trim()) $("quizNombre").value = "Desde una foto";
+      sumarUsoIA();
+      pintarUsoIA();
+      pintarEditor();
+      toastMsg("Listo: " + preguntas.length + " preguntas creadas desde la foto. Revísalas y guarda.");
+    }, function(msg){
+      toastMsg(msg);
+    }, null, true, true, { base64: base64, mime: mime });
+  };
+  lector.onerror = function(){ toastMsg("No pude leer la foto. Intenta otra."); };
+  lector.readAsDataURL(archivo);
+}
+
+/* ---------- #8 REVISAR EL QUIZ CON IA ---------- */
+function revisarQuizConIA(){
+  if(usoIAHoy().n >= limiteDiarioIA){ toastMsg("Ya usaste las " + limiteDiarioIA + " acciones de IA de hoy. Vuelve mañana."); return; }
+  var datos = leerValoresEditor();
+  var completas = datos.preguntas.filter(function(p){ return p.pregunta && p.opciones.filter(Boolean).length >= 2; });
+  if(!completas.length){ toastMsg("Escribe al menos una pregunta para revisarla."); return; }
+  var lista = completas.map(function(p, i){
+    return (i + 1) + ") " + p.pregunta + " | Opciones: " + p.opciones.map(function(o, j){ return letraDe(j) + ") " + o; }).join(" ") + " | Correcta: " + letraDe(p.correcta);
+  }).join("\n");
+  var texto = "Eres un experto en evaluación educativa. Revisa estas preguntas de un quiz escolar y detecta problemas reales antes de aplicarlas en clase. Busca: dos opciones que puedan ser correctas, la respuesta correcta que no está entre las opciones, preguntas ambiguas o con dobles sentidos, distractores que son absurdos o que se repiten, preguntas demasiado difíciles o con información que no está en el texto, y textos mal escritos. Responde SOLO con JSON válido, sin texto adicional, con esta estructura: {\"resultados\":[{\"numero\":1,\"problema\":\"...\",\"sugerencia\":\"...\"}]}. Si todo está bien, devuelve {\"resultados\":[]}. Escribe en español, breve y claro.\n\n" + lista;
+  var caja = $("revisionIA");
+  if(caja) caja.innerHTML = '<div class="aviso-revision">Nia está revisando tus preguntas…</div>';
+  pedirAIA(texto, function(txt){
+    var salida = null;
+    try{
+      var ini = txt.indexOf("{"); var fin = txt.lastIndexOf("}");
+      salida = JSON.parse(ini >= 0 ? txt.slice(ini, fin + 1) : txt);
+    }catch(e){}
+    var res = (salida && salida.resultados) || [];
+    if(!Array.isArray(res)) res = [];
+    if(!caja) return;
+    if(!res.length){
+      caja.innerHTML = '<div class="aviso-revision">Revisadas ' + completas.length + ' pregunta(s): <b>todo se ve bien</b>. No encontré errores ni ambigüedades.</div>';
+    }else{
+      var html = '<div class="aviso-revision"><b>Revisión de Nia (' + res.length + ' hallazgo(s))</b></div>';
+      res.slice(0, 12).forEach(function(r){
+        html += '<div class="aviso-revision mal"><b>Pregunta ' + esc(r.numero) + ':</b> ' + esc(r.problema) + '<br><b>Sugerencia:</b> ' + esc(r.sugerencia) + '</div>';
+      });
+      caja.innerHTML = html;
+    }
+    sumarUsoIA();
+    pintarUsoIA();
+    toastMsg("Revisión lista.");
+  }, function(msg){
+    if(caja) caja.innerHTML = "";
+    toastMsg(msg);
+  }, null, true, true);
+}
+
+/* ---------- #1 EXPLICAR LA RESPUESTA CON IA ---------- */
+function explicarPreguntaIA(idx){
+  if(usoIAHoy().n >= limiteDiarioIA){ toastMsg("Ya usaste las " + limiteDiarioIA + " acciones de IA de hoy. Vuelve mañana."); return; }
+  var p = quizEditando.preguntas[idx];
+  var textoPregunta = ($("qe_p_t" + idx) ? $("qe_p_t" + idx).value : p.pregunta) || "";
+  if(!textoPregunta.trim()){ toastMsg("Escribe primero el texto de la pregunta."); return; }
+  var ops = p.tipo === "vf" ? ["Verdadero", "Falso"] : (p.opciones || []).slice();
+  for(var i = 0; i < 4; i++){
+    var el = $("qe_p_o" + i + "_" + idx);
+    if(el && ops[i] !== undefined && el.value){ ops[i] = el.value; }
+  }
+  var correcta = ops[p.correcta] || "";
+  var texto = "Escribe UNA sola frase breve (máximo 25 palabras, en español) que explique por qué la respuesta correcta a esta pregunta de clase es \"" + correcta + "\". No repitas la pregunta ni digas 'la respuesta correcta es'; solo explica. Pregunta: \"" + textoPregunta + "\".";
+  pedirAIA(texto, function(txt){
+    var ex = (txt || "").trim().replace(/^["'`]+|["'`]+$/g, "");
+    if(ex.length > 320) ex = ex.slice(0, 320) + "…";
+    quizEditando.preguntas[idx].explica = ex;
+    sumarUsoIA();
+    pintarUsoIA();
+    pintarEditor();
+    toastMsg("Explicación lista. Se verá al revelar la respuesta.");
+  }, function(msg){ toastMsg(msg); }, null, false, true);
 }
 
 /* ---------- ASESOR IA (chat del profe) ---------- */
@@ -919,11 +1370,22 @@ var chatHistorial = [];
 
 function abrirChat(){
   chatHistorial = [];
-  $("chatCaja").innerHTML = '<div class="avisos" style="padding:8px">Soy el asesor IA. Pregúntame lo que necesites para tu clase.</div>';
+  _iaEscribiendo = false;
+  pintarPerfilIA();
+  _pintarVozIA();
+  var p = leerPerfilProfe();
+  estadoChatIA(p.nombre ? "Te conoce como profe " + p.nombre : "Dile tu nombre para que te conozca");
+  if(p.nombre){
+    chatHistorial.push({ rol: "ia", texto: "¡Hola profe " + p.nombre + "! Ya tengo presente que das " + (p.materia || "tu materia") + (p.grado ? " en el grado " + formatearGrado(p.grado) : "") + ". Dime qué necesitas hoy: ideas de preguntas, explicaciones, distractores difíciles o prepararte la clase." });
+  }else{
+    chatHistorial.push({ rol: "ia", texto: "Hola, ¿en qué te ayudo hoy? Escribe tu nombre arriba y te llamo por él. Puedes pedirme un quiz, explicaciones, distractores o ayuda para planear la clase." });
+  }
   activar("pantallaProfeChat");
   setTimeout(function(){ var e = $("chatEntrada"); if(e) e.focus(); }, 60);
+  renderChat();
 }
 
+var _iaEscribiendo = false;
 function renderChat(){
   var caja = $("chatCaja");
   if(!caja) return;
@@ -934,6 +1396,9 @@ function renderChat(){
       : 'background:#171a2c;border:1px solid #ffffff18';
     html += '<div style="max-width:86%;padding:10px 14px;border-radius:14px;margin:7px 0;font-size:14px;line-height:1.45;' + estilo + '">' + esc(m.texto) + '</div>';
   });
+  if(_iaEscribiendo){
+    html += '<div class="ia-pensando" style="max-width:86%;padding:13px 15px;border-radius:14px;margin:7px 0;background:#171a2c;border:1px solid #a55bff44"><i></i><i></i><i></i></div>';
+  }
   caja.innerHTML = html;
   caja.scrollTop = caja.scrollHeight;
 }
@@ -946,19 +1411,29 @@ function enviarChat(){
   chatHistorial.push({ rol: "profe", texto: txt });
   entrada.value = "";
   renderChat();
-  var conv = chatHistorial.slice(-6).map(function(m){ return (m.rol === "profe" ? "Profesor: " : "Asesor IA: ") + m.texto; }).join("\n");
-  var texto = "Eres el asesor IA de un profesor. Ayudas a redactar preguntas, explicar temas, sugerir distractores y preparar clases. Responde claro, en español, y de forma breve (máximo 150 palabras).\n\n" + conv + "\nResponde al último mensaje del profesor.";
+  var quien = leerPerfilProfe().nombre ? "Profe " + leerPerfilProfe().nombre : "Profesor";
+  var conv = chatHistorial.slice(-6).map(function(m){ return (m.rol === "profe" ? quien + ": " : "Asesor IA: ") + m.texto; }).join("\n");
+  var texto = "Eres Nia, la asesora IA de un profesor. Ayudas a redactar preguntas, explicar temas, sugerir distractores y preparar clases. Responde claro, en español, y de forma breve (máximo 150 palabras). Si ya saludaste al inicio de la conversación, no vuelvas a saludar.\n\n" + conv + "\nResponde al último mensaje del profesor.";
   var boton = $("btnEnviarChat");
   if(boton){ boton.disabled = true; boton.textContent = "..."; }
+  _iaEscribiendo = true;
+  estadoChatIA("Está escribiendo tu respuesta…");
+  renderChat();
   pedirAIA(texto, function(txt){
     chatHistorial.push({ rol: "ia", texto: txt });
+    _iaEscribiendo = false;
+    estadoChatIA(_vozIAOn ? "Te escucha y te lee" : "Lista para ayudarte con tu clase");
     renderChat();
     sumarUsoIA();
     if(boton){ boton.disabled = false; boton.textContent = "Enviar"; }
+    if(_vozIAOn) _leerVoz(txt, function(){ estadoChatIA(_vozIAOn ? "Te escucha y te lee" : "Lista para ayudarte con tu clase"); });
   }, function(msg){
+    _iaEscribiendo = false;
+    estadoChatIA(_vozIAOn ? "Te escucha y te lee" : "Lista para ayudarte con tu clase");
+    renderChat();
     if(boton){ boton.disabled = false; boton.textContent = "Enviar"; }
     toastMsg(msg);
-  }, boton, false);
+  }, boton, false, false);
 }
 
 function volverChat(){
@@ -1003,6 +1478,43 @@ function subirRoom(codigo, intento){
       .catch(function(){ if(intento < 4){ setTimeout(function(){ subirRoom(codigo, intento + 1); }, 1000 * (intento + 1)); } });
   }catch(e){}
 }
+
+/* ---------- ESCRITURA SEGURA: SOLO LO PROPIO ---------- */
+function sanearApodo(t){
+  return String(t || "").replace(/[.#$\[\]\/]/g, "").trim().slice(0, 16);
+}
+function urlAlumno(codigo, apodo){
+  return urlRoom(codigo) + "/alumnos/" + encodeURIComponent(apodo);
+}
+/* Actualiza SOLO los datos de un alumno. Nunca manda la sala entera,
+   para que un celular lento no pueda borrar respuestas de los demas. */
+function escribirAlumno(codigo, apodo, cambios, intento){
+  try{
+    fetch(urlAlumno(codigo, apodo), { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cambios) })
+      .then(function(r){ if(!r.ok){ throw new Error("http"); } })
+      .catch(function(){
+        if(intento < 5){ setTimeout(function(){ escribirAlumno(codigo, apodo, cambios, intento + 1); }, 700 * (intento + 1)); }
+      });
+  }catch(e){}
+}
+/* El profesor escribe sobre una copia recien bajada del servidor:
+   asi nunca pisa lo que un alumno acaba de responder. */
+function escribirRoomFresco(cb){
+  var listo = function(){ _escribiendoFresco = false; };
+  if(_escribiendoFresco){ setTimeout(function(){ escribirRoomFresco(cb); }, 300); return; }
+  _escribiendoFresco = true;
+  try{
+    fetch(urlRoom(salaCode), { cache: "no-store" })
+      .then(function(x){ return x.json(); })
+      .then(function(fresco){
+        var room = normalizarRoom(fresco);
+        if(room){ cb(room); listo(); }
+        else { cb(leerRoom(salaCode)); listo(); }
+      })
+      .catch(function(){ cb(leerRoom(salaCode)); listo(); });
+  }catch(e){ cb(leerRoom(salaCode)); listo(); }
+}
+var _escribiendoFresco = false;
 function obtenerSala(codigo, cb){
   var r = leerRoom(codigo);
   if(r){ cb(r); return; }
@@ -1042,6 +1554,16 @@ function preguntaActual(room){
   return q.preguntas[origen];
 }
 
+function _fijarRtaPendiente(room){
+  if(!room || !miApodo || !_rtaPendiente){ return; }
+  var yo = room.alumnos[miApodo];
+  if(!yo){ _rtaPendiente = null; return; }
+  if(yo.rta === _rtaPendiente.opt){ _rtaPendiente = null; return; }
+  if(Date.now() - _rtaPendiente.ts < 3000){ yo.rta = _rtaPendiente.opt; }
+  else { _rtaPendiente = null; }
+}
+var _rtaPendiente = null;
+
 function escucharSala(cb){
   var onStorage = function(e){
     if(e.key === claveRoom(salaCode)){
@@ -1053,7 +1575,7 @@ function escucharSala(cb){
     try{
       fetch(urlRoom(salaCode), { cache: "no-store" }).then(function(x){ return x.json(); }).then(function(room){
         room = normalizarRoom(room);
-        if(room){ _cacheRoom[salaCode] = room; cb(room); }
+        if(room){ _fijarRtaPendiente(room); _cacheRoom[salaCode] = room; cb(room); }
       }).catch(function(){
         var r = leerRoom(salaCode);
         if(r){ cb(r); }
@@ -1102,12 +1624,14 @@ function comenzarQuiz(i){
 }
 
 function firmaProfe(room){
-  var n = 0; var nAns = 0;
+  var n = 0; var nAns = 0; var dist = [];
   Object.keys(room.alumnos || {}).forEach(function(nombre){
     var a = room.alumnos[nombre]; n++;
-    if(a && a.rta !== null && a.rta !== undefined) nAns++;
+    var r = a ? a.rta : null;
+    if(r !== null && r !== undefined){ nAns++; dist.push(r); }
   });
-  return room.estado + "|" + room.preguntaActual + "|" + room.inicioTs + "|" + n + "|" + nAns + "|" + (room.stats ? room.stats.length : 0);
+  dist.sort();
+  return room.estado + "|" + room.preguntaActual + "|" + room.inicioTs + "|" + n + "|" + nAns + "|" + (room.stats ? room.stats.length : 0) + "|" + dist.join(",");
 }
 function firmaAlumno(room){
   var yo = room.alumnos[miApodo] || {};
@@ -1162,6 +1686,17 @@ function renderProfeSala(room){
     if(ultimo){
       var pct = ultimo.respondidos ? Math.round(ultimo.aciertos / ultimo.respondidos * 100) : 0;
       statBlock = '<div class="stat-resumen">Aciertos: <b>' + ultimo.aciertos + '</b> de ' + ultimo.respondidos + ' (' + pct + '%)</div>';
+      if(ultimo.porOpcion && ultimo.porOpcion.length){
+        statBlock += '<div class="distribucion"><div class="dist-titulo">Qué eligieron tus estudiantes:</div>';
+        q.opciones.forEach(function(op, i){
+          var c = ultimo.porOpcion[i] || 0;
+          var esCorr = i === q.correcta;
+          statBlock += '<div class="dist-fila' + (esCorr ? " ok" : "") + '"><span class="letra">' + letraDe(i) + '</span>' +
+            '<span class="dist-op">' + esc(op.length > 34 ? op.slice(0, 34) + "…" : op) + '</span>' +
+            '<span class="dist-n">' + c + (esCorr ? " ✓" : "") + '</span></div>';
+        });
+        statBlock += '</div>';
+      }
     }
     var fila = '';
     Object.keys(room.alumnos).forEach(function(nombre){
@@ -1174,6 +1709,7 @@ function renderProfeSala(room){
     cont.innerHTML = '' +
       '<div class="tarjeta-pregunta"><div class="numero">RESPUESTA</div><h2>' + esc(q.pregunta) + '</h2>' + queryOpCode(opciones) + '</div>' +
       statBlock +
+      bloqueExplicacion(q) +
       '<div class="encabezado-seccion" style="margin-top:6px">Quién acertó</div>' + fila +
       '<button class="btn btn-primario" style="margin-top:16px" onclick="' + (esUltima ? "verResultadosFinales()" : "siguientePregunta()") + '">' + (esUltima ? "Ver resultados" : "Siguiente pregunta") + '</button>';
     return;
@@ -1185,6 +1721,155 @@ function renderProfeSala(room){
 }
 
 function queryOpCode(h){ return h; }
+
+/* ---------- #4 LEER EN VOZ ALTA ---------- */
+var _vozOn = false;
+function _textoParaLeer(){
+  var room = salaCode ? leerRoom(salaCode) : null;
+  if(!room) return "";
+  var p = preguntaActual(room);
+  if(!p) return "";
+  var partes = [p.pregunta];
+  if(Array.isArray(p.opciones)){
+    p.opciones.forEach(function(o, i){ partes.push(letraDe(i) + ". " + o); });
+  }
+  return partes.join(". ");
+}
+function leerEnVozAlta(){
+  try{
+    if(!("speechSynthesis" in window)){ toastMsg("Este navegador no puede leer en voz alta."); return; }
+    if(_vozOn){
+      window.speechSynthesis.cancel();
+      _vozOn = false;
+      return;
+    }
+    var texto = _textoParaLeer();
+    if(!texto){ toastMsg("No hay pregunta para leer todavía."); return; }
+    var u = new SpeechSynthesisUtterance(texto);
+    u.lang = "es-ES";
+    u.rate = 0.92;
+    u.pitch = 1.02;
+    var voces = window.speechSynthesis.getVoices() || [];
+    for(var i = 0; i < voces.length; i++){
+      if(voces[i].lang && voces[i].lang.toLowerCase().indexOf("es") === 0){ u.voice = voces[i]; break; }
+    }
+    _vozOn = true;
+    u.onend = function(){ _vozOn = false; };
+    u.onerror = function(){ _vozOn = false; };
+    window.speechSynthesis.speak(u);
+  }catch(e){ toastMsg("No se pudo leer en voz alta."); }
+}
+
+/* ---------- VOZ DE NIA: LEER RESPUESTAS + HABLARLE ---------- */
+var _vozIAOn = false;
+function _leerVoz(texto, alTerminar){
+  try{
+    if(!("speechSynthesis" in window)){ toastMsg("Este navegador no puede leer en voz alta."); return; }
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(String(texto || ""));
+    u.lang = "es-ES";
+    u.rate = 0.95;
+    u.pitch = 1.04;
+    var voces = window.speechSynthesis.getVoices() || [];
+    var mejor = null;
+    for(var i = 0; i < voces.length; i++){
+      var l = (voces[i].lang || "").toLowerCase();
+      if(l.indexOf("es") !== 0) continue;
+      if(/female|mujer|monica|paulina|helena|sabina|lupe|sabina/i.test(voces[i].name)){ mejor = voces[i]; break; }
+      if(!mejor) mejor = voces[i];
+    }
+    if(mejor) u.voice = mejor;
+    u.onend = function(){ if(alTerminar) alTerminar(); };
+    u.onerror = function(){ if(alTerminar) alTerminar(); };
+    window.speechSynthesis.speak(u);
+  }catch(e){ if(alTerminar) alTerminar(); }
+}
+function alternarVozIA(){
+  _vozIAOn = !_vozIAOn;
+  try{ localStorage.setItem("ce_voz_ia", _vozIAOn ? "1" : "0"); }catch(e){}
+  var e = $("vozIAEstado");
+  if(e) e.textContent = _vozIAOn ? "sí" : "no";
+  if(_vozIAOn){
+    toastMsg("Nia va a leer sus respuestas en voz alta.");
+    _leerVoz("Hola " + (leerPerfilProfe().nombre ? "profe " + leerPerfilProfe().nombre : "") + ". Ya leo mis respuestas en voz alta.");
+  }else{
+    window.speechSynthesis.cancel();
+    toastMsg("Voz apagada.");
+  }
+}
+function _pintarVozIA(){
+  try{ _vozIAOn = localStorage.getItem("ce_voz_ia") === "1"; }catch(e){}
+  var e = $("vozIAEstado");
+  if(e) e.textContent = _vozIAOn ? "sí" : "no";
+}
+
+var _reconocimiento = null;
+var _micActivo = false;
+function hablarConNia(){
+  if(_micActivo){
+    if(_reconocimiento){ try{ _reconocimiento.stop(); }catch(e){} }
+    return;
+  }
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ toastMsg("Este navegador no entiende voz. Escribe tu pregunta en el chat y Nia te la lee."); return; }
+  try{
+    _reconocimiento = new SR();
+    _reconocimiento.lang = "es-ES";
+    _reconocimiento.interimResults = false;
+    _reconocimiento.maxAlternatives = 1;
+    _reconocimiento.continuous = false;
+  }catch(e){ toastMsg("No se pudo activar el micrófono."); return; }
+  var boton = $("btnMicro");
+  var entrada = $("chatEntrada");
+  _micActivo = true;
+  if(boton){ boton.style.background = "#ff4d6d33"; boton.style.borderColor = "#ff4d6d"; }
+  estadoChatIA("Te estoy escuchando...");
+  _reconocimiento.onresult = function(ev){
+    var dicho = (ev.results && ev.results[0] && ev.results[0][0]) ? ev.results[0][0].transcript : "";
+    _micFin();
+    if(!dicho){ toastMsg("No alcancé a oír. Inténtalo de nuevo."); return; }
+    if(entrada) entrada.value = dicho;
+    toastMsg("Escuché: " + dicho);
+    enviarChat();
+  };
+  _reconocimiento.onerror = function(ev){
+    _micFin();
+    var m = (ev && ev.error === "not-allowed") ? "Necesito permiso del micrófono para escucharte." : "No pude usar el micrófono. Escribe tu pregunta en el chat.";
+    toastMsg(m);
+  };
+  _reconocimiento.onend = function(){ _micFin(); };
+  try{ _reconocimiento.start(); }catch(e){ _micFin(); toastMsg("No se pudo activar el micrófono."); }
+}
+function _micFin(){
+  _micActivo = false;
+  var boton = $("btnMicro");
+  if(boton){ boton.style.background = ""; boton.style.borderColor = ""; }
+  if(!_iaEscribiendo) estadoChatIA(_vozIAOn ? "Te escucha y te lee" : "Lista para ayudarte con tu clase");
+}
+
+/* ---------- #1 BLOQUE DE EXPLICACIÓN ---------- */
+function bloqueExplicacion(q){
+  if(!q || !q.explica) return "";
+  return '<div class="explicacion"><b>💡 Por qué esa respuesta</b><p>' + esc(q.explica) + '</p>' +
+    '<button class="btn-leer" style="margin-top:8px" onclick="leerTextoIA()">🔊 Escuchar</button></div>';
+}
+function leerTextoIA(){
+  try{
+    if(!("speechSynthesis" in window)){ toastMsg("Este navegador no puede leer en voz alta."); return; }
+    var room = salaCode ? leerRoom(salaCode) : null;
+    var q = room ? preguntaActual(room) : null;
+    if(!q || !q.explica){ toastMsg("No hay explicación para leer."); return; }
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(q.explica);
+    u.lang = "es-ES";
+    u.rate = 0.95;
+    var voces = window.speechSynthesis.getVoices() || [];
+    for(var i = 0; i < voces.length; i++){
+      if(voces[i].lang && voces[i].lang.toLowerCase().indexOf("es") === 0){ u.voice = voces[i]; break; }
+    }
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
 
 function pintarJugadoresEspera(room){
   var el = $("listaJugadoresEspera");
@@ -1231,45 +1916,52 @@ function resetearRespuestas(room){
 }
 
 function revelarPregunta(){
-  var room = leerRoom(salaCode);
-  if(!room) return;
-  var q = preguntaActual(room);
-  var seg = q.seg;
-  var porOpcion = q.opciones.map(function(){ return 0; });
-  var respondidos = 0, aciertos = 0;
-  Object.keys(room.alumnos).forEach(function(nombre){
-    var a = room.alumnos[nombre];
-    if(a.rta === null || a.rta === undefined) return;
-    respondidos++;
-    porOpcion[a.rta]++;
-    if(a.rta === q.correcta){
-      aciertos++;
-      a.aciertos = (a.aciertos || 0) + 1;
-      var t = Math.min(a.tMs || 0, seg * 1000);
-      var bonus = Math.max(0, Math.round(60 * (1 - t / (seg * 1000))));
-      a.ganado = 100 + bonus;
-    }else{
-      a.ganado = 0;
-    }
-    a.total = (a.total || 0) + a.ganado;
+  if(_revelando){ return; }
+  _revelando = true;
+  escribirRoomFresco(function(room){
+    _revelando = false;
+    if(!room){ return; }
+    if(room.estado !== "pregunta"){ renderProfeSala(room); return; }
+    var q = preguntaActual(room);
+    var seg = q.seg;
+    var porOpcion = q.opciones.map(function(){ return 0; });
+    var respondidos = 0, aciertos = 0;
+    Object.keys(room.alumnos).forEach(function(nombre){
+      var a = room.alumnos[nombre];
+      if(a.rta === null || a.rta === undefined) return;
+      respondidos++;
+      porOpcion[a.rta]++;
+      if(a.rta === q.correcta){
+        aciertos++;
+        a.aciertos = (a.aciertos || 0) + 1;
+        var t = Math.min(a.tMs || 0, seg * 1000);
+        var bonus = Math.max(0, Math.round(60 * (1 - t / (seg * 1000))));
+        a.ganado = 100 + bonus;
+      }else{
+        a.ganado = 0;
+      }
+      a.total = (a.total || 0) + a.ganado;
+    });
+    room.stats.push({ pregunta: q.pregunta, respondidos: respondidos, aciertos: aciertos, porOpcion: porOpcion });
+    room.estado = "revelada";
+    escribirRoom(room);
+    sonRevelado();
+    renderProfeSala(room);
   });
-  room.stats.push({ pregunta: q.pregunta, respondidos: respondidos, aciertos: aciertos, porOpcion: porOpcion });
-  room.estado = "revelada";
-  escribirRoom(room);
-  sonRevelado();
-  renderProfeSala(room);
 }
+var _revelando = false;
 
 function siguientePregunta(){
-  var room = leerRoom(salaCode);
-  if(!room) return;
-  if(room.preguntaActual >= room.quiz.preguntas.length - 1){ verResultadosFinales(); return; }
-  room.preguntaActual++;
-  room.estado = "pregunta";
-  room.inicioTs = Date.now();
-  resetearRespuestas(room);
-  escribirRoom(room);
-  renderProfeSala(room);
+  escribirRoomFresco(function(room){
+    if(!room) return;
+    if(room.preguntaActual >= room.quiz.preguntas.length - 1){ verResultadosFinales(); return; }
+    room.preguntaActual++;
+    room.estado = "pregunta";
+    room.inicioTs = Date.now();
+    resetearRespuestas(room);
+    escribirRoom(room);
+    renderProfeSala(room);
+  });
 }
 
 function verResultadosFinales(){
@@ -1335,8 +2027,171 @@ function renderResultadosFinales(room){
     podio +
     '<table class="tabla-resultados">' + tab + '</table>' +
     analisis +
-    '<button class="btn btn-primario" style="margin-top:16px" onclick="rejugarQuiz()">Jugar de nuevo</button>' +
+    '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">' +
+      '<button class="btn btn-primario" style="flex:1 1 46%" onclick="informeClaseConIA()">Informe de la clase con IA</button>' +
+      '<button class="btn btn-secundario" style="flex:1 1 46%" onclick="diplomaGanador()">Diploma del ganador</button>' +
+    '</div>' +
+    '<div id="informeIA"></div>' +
+    '<button class="btn btn-primario" style="margin-top:10px" onclick="rejugarQuiz()">Jugar de nuevo</button>' +
     '<button class="btn btn-secundario" style="margin-top:10px" onclick="cerrarSalaProfe()">Cerrar sala</button>';
+}
+
+/* ---------- #2 INFORME DE CLASE CON IA ---------- */
+function informeClaseConIA(){
+  if(usoIAHoy().n >= limiteDiarioIA){ toastMsg("Ya usaste las " + limiteDiarioIA + " acciones de IA de hoy. Vuelve mañana."); return; }
+  var room = salaCode ? leerRoom(salaCode) : null;
+  if(!room || room.estado !== "fin"){ toastMsg("Primero termina la partida para hacer el informe."); return; }
+  var caja = $("informeIA");
+  if(caja) caja.innerHTML = '<div class="informe-ia">Nia está escribiendo el informe de la clase…</div>';
+  var arr = ordenarJugadores(room);
+  var lineasAlumnos = arr.map(function(j){
+    return "- " + j.nombre + ": " + (j.aciertos || 0) + " aciertos de " + (room.stats.length) + ", " + (j.total || 0) + " puntos";
+  }).join("\n");
+  var lineasPreguntas = room.stats.map(function(s, k){
+    var pct = s.respondidos ? Math.round(s.aciertos / s.respondidos * 100) : 0;
+    var masElegida = 0;
+    if(s.porOpcion && s.porOpcion.length){
+      for(var i = 1; i < s.porOpcion.length; i++){ if(s.porOpcion[i] > s.porOpcion[masElegida]) masElegida = i; }
+    }
+    return "- Pregunta " + (k + 1) + ": " + s.pregunta + " | acertaron " + s.aciertos + " de " + s.respondidos + " (" + pct + "%), la mayoría eligió la opción " + letraDe(masElegida);
+  }).join("\n");
+  var texto = "Eres un analista de datos educativos. Escribes informes breves y útiles para el profesor, en español, con este formato exacto:\n" +
+    "LO QUE SE ENTENDIÓ: (1 o 2 frases)\n" +
+    "LO QUE HAY QUE REPASAR: (nombra los temas o preguntas donde mas fallos hubo)\n" +
+    "RECOMENDACIÓN PARA LA PRÓXIMA CLASE: (1 frase concreta y práctica)\n" +
+    (leerPerfilProfe().nombre ? "Empieza siempre el informe con 'Profe " + leerPerfilProfe().nombre + ",' seguido de una frase corta de ánimo.\n" : "") + "\n" +
+    "Datos de la clase. Tema del quiz: " + (room.quiz && room.quiz.nombre ? room.quiz.nombre : "sin nombre") + ". Alumnos: " + arr.length + ".\n" +
+    lineasAlumnos + "\n" + lineasPreguntas;
+  pedirAIA(texto, function(txt){
+    var limpio = (txt || "").trim();
+    if(limpio.length > 2200) limpio = limpio.slice(0, 2200);
+    if(caja) caja.innerHTML = '<div class="informe-ia">' + esc(limpio) + '</div>' +
+      '<div class="barra-fotos"><button class="btn-leer" onclick="leerTextoLibre(this)">🔊 Escuchar el informe</button>' +
+      '<button class="btn-leer" onclick="copiarTexto(this)">Copiar informe</button></div>';
+    sumarUsoIA();
+    pintarUsoIA();
+  }, function(msg){
+    if(caja) caja.innerHTML = "";
+    toastMsg(msg);
+  }, null, false, true);
+}
+
+function copiarTexto(btn){
+  try{
+    var caja = $("informeIA");
+    if(!caja) return;
+    var texto = caja.textContent || "";
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(texto);
+      toastMsg("Informe copiado.");
+    }else{
+      toastMsg("Copia manual: selecciona el texto del informe.");
+    }
+  }catch(e){ toastMsg("No se pudo copiar."); }
+}
+function leerTextoLibre(btn){
+  try{
+    if(!("speechSynthesis" in window)){ toastMsg("Este navegador no puede leer en voz alta."); return; }
+    var caja = $("informeIA");
+    if(!caja) return;
+    var texto = (caja.textContent || "").slice(0, 900);
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(texto);
+    u.lang = "es-ES";
+    u.rate = 0.95;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------- #7 DIPLOMA DEL GANADOR ---------- */
+function diplomaGanador(){
+  var room = salaCode ? leerRoom(salaCode) : null;
+  if(!room || room.estado !== "fin"){ toastMsg("Primero termina la partida para crear el diploma."); return; }
+  var arr = ordenarJugadores(room);
+  if(!arr.length){ toastMsg("No hay alumnos con resultados todavía."); return; }
+  var ganador = arr[0];
+  var caja = $("informeIA");
+  if(caja) caja.innerHTML = '<div class="informe-ia">Nia está escribiendo el diploma de ' + esc(ganador.nombre) + '…</div>';
+  var texto = "Escribe un mensaje corto y cálido (máximo 2 frases, en español) para un estudiante que ganó el quiz '" +
+    ((room.quiz && room.quiz.nombre) ? room.quiz.nombre : "de la clase") + "' con " + (ganador.total || 0) + " puntos. Motivante, no exagerado, y menciona una cualidad (esfuerzo, curiosidad, constancia).";
+  pedirAIA(texto, function(txt){
+    var frase = (txt || "").trim().replace(/^["']+|["']+$/g, "");
+    if(frase.length > 320) frase = frase.slice(0, 320);
+    dibujarDiploma(ganador, frase, room.quiz && room.quiz.nombre ? room.quiz.nombre : "Clase Épica");
+    sumarUsoIA();
+    pintarUsoIA();
+  }, function(msg){
+    if(caja) caja.innerHTML = "";
+    toastMsg(msg);
+  }, null, false, true);
+}
+
+function dibujarDiploma(ganador, frase, titulo){
+  var W = 760, H = 1000;
+  var c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  var x = c.getContext("2d");
+  var col = ganador.color || "#a55bff";
+  var g = x.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, "#120e26"); g.addColorStop(0.5, "#1a1038"); g.addColorStop(1, "#0d1a2e");
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  var g2 = x.createLinearGradient(0, 0, W, 0);
+  g2.addColorStop(0, "#ff4d8d"); g2.addColorStop(0.5, "#a55bff"); g2.addColorStop(1, "#4da6ff");
+  x.strokeStyle = g2; x.lineWidth = 14; x.strokeRect(28, 28, W - 56, H - 56);
+  x.lineWidth = 3; x.strokeStyle = "#ffffff33"; x.strokeRect(52, 52, W - 104, H - 104);
+  x.textAlign = "center";
+  x.fillStyle = "#ffffffcc"; x.font = "700 26px Segoe UI, sans-serif";
+  x.fillText("CLASE", W / 2, 150);
+  var lg = x.createLinearGradient(0, 0, W, 0);
+  lg.addColorStop(0, "#ff4d8d"); lg.addColorStop(0.5, "#a55bff"); lg.addColorStop(1, "#4da6ff");
+  x.fillStyle = lg; x.font = "900 62px Segoe UI, sans-serif";
+  x.fillText("ÉPICA", W / 2, 215);
+  x.fillStyle = "#b9bede"; x.font = "600 20px Segoe UI, sans-serif";
+  x.fillText("DIPLOMA DE HONOR AL MEJOR DESEMPEÑO", W / 2, 275);
+  x.fillStyle = "#ffffff88"; x.font = "400 20px Segoe UI, sans-serif";
+  x.fillText("Se otorga a", W / 2, 345);
+  x.fillStyle = col; x.beginPath(); x.arc(W / 2, 445, 78, 0, Math.PI * 2); x.fill();
+  x.fillStyle = "#0d0f1a"; x.font = "900 70px Segoe UI, sans-serif";
+  var inicial = (ganador.nombre || "?").trim().charAt(0).toUpperCase();
+  x.fillText(inicial, W / 2, 472);
+  x.fillStyle = "#ffffff"; x.font = "900 52px Segoe UI, sans-serif";
+  x.fillText(ganador.nombre || "", W / 2, 585);
+  x.fillStyle = "#ffd166"; x.font = "700 26px Segoe UI, sans-serif";
+  x.fillText((ganador.total || 0) + " puntos · " + (ganador.aciertos || 0) + " aciertos", W / 2, 632);
+  x.fillStyle = "#cfd3ff"; x.font = "italic 400 23px Segoe UI, sans-serif";
+  var palabras = String(frase).split(" ");
+  var linea = "", y = 715;
+  for(var i = 0; i < palabras.length; i++){
+    var prueba = linea ? linea + " " + palabras[i] : palabras[i];
+    if(x.measureText(prueba).width > W - 200){ x.fillText(linea, W / 2, y); y += 32; linea = palabras[i]; }
+    else linea = prueba;
+  }
+  if(linea) x.fillText(linea, W / 2, y);
+  x.fillStyle = "#ffffff66"; x.font = "400 19px Segoe UI, sans-serif";
+  x.fillText("Quiz: " + (titulo || ""), W / 2, 862);
+  var perfil = leerPerfilProfe();
+  x.fillStyle = "#ffd166"; x.font = "700 20px Segoe UI, sans-serif";
+  x.fillText(perfil.nombre ? "Profe " + perfil.nombre + (perfil.colegio ? " · " + perfil.colegio : "") : "Clase Épica", W / 2, 902);
+  x.fillStyle = "#ffffff44"; x.font = "400 16px Segoe UI, sans-serif";
+  x.fillText("la clase que todos quieren jugar", W / 2, 934);
+  var url = c.toDataURL("image/png");
+  var caja = $("informeIA");
+  if(caja){
+    caja.innerHTML = '<div style="margin-top:14px;text-align:center">' +
+      '<img src="' + url + '" style="width:100%;max-width:340px;border-radius:14px;box-shadow:0 12px 40px #00000077">' +
+      '<div class="barra-fotos" style="justify-content:center"><a class="btn btn-primario" style="text-decoration:none" href="' + url + '" download="diploma-' + (ganador.nombre || "ganador") + '.png">Descargar imagen</a>' +
+      '<button class="btn-leer" onclick="compartirDiploma(this)">Compartir</button></div></div>';
+    caja.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+}
+function compartirDiploma(btn){
+  try{
+    if(navigator.share){
+      navigator.share({ title: "Mi diploma de Clase Épica", text: "Gané el quiz en Clase Épica" }).catch(function(){});
+    }else{
+      toastMsg("Tu navegador no permite compartir. Usa Descargar imagen.");
+    }
+  }catch(e){ toastMsg("No se pudo compartir."); }
 }
 
 function rejugarQuiz(){
@@ -1370,6 +2225,8 @@ function unirseSala(){
   var apodo = ($("alumnoApodo").value || "").trim();
   if(!/^\d{4}$/.test(codigo)){ toastMsg("El código son 4 números."); return; }
   if(apodo.length < 2){ toastMsg("Escribe tu apodo."); return; }
+  apodo = sanearApodo(apodo);
+  if(apodo.length < 2){ toastMsg("Escribe un apodo válido."); return; }
   var btn = $("btnEntrar");
   if(btn){ btn.disabled = true; btn.textContent = "Buscando..."; }
   obtenerSala(codigo, function(room){
@@ -1378,8 +2235,12 @@ function unirseSala(){
     if(room.estado === "fin"){ toastMsg("Ese quiz ya terminó."); return; }
     if(room.alumnos[apodo]){ toastMsg("Ese apodo ya está en la sala."); return; }
     if(Object.keys(room.alumnos).length >= 60){ toastMsg("La sala está llena."); return; }
-    room.alumnos[apodo] = { color: miColor, total: 0, aciertos: 0, rta: null, tMs: 0, ganado: 0 };
-    escribirRoom(room);
+    var nuevo = { color: miColor, total: 0, aciertos: 0, rta: null, tMs: 0, ganado: 0 };
+    room.alumnos[apodo] = nuevo;
+    _miRegistro = nuevo;
+    _reintentandoUnion = false;
+    _rtaPendiente = null;
+    escribirAlumno(codigo, apodo, nuevo);
     miApodo = apodo;
     ponerMarca(miApodo);
     guardarPerfil({ apodo: apodo, color: miColor });
@@ -1398,9 +2259,17 @@ function renderAlumnoSala(room){
   var cont = $("alumnoSalaContenido");
   var yo = room.alumnos[miApodo];
   if(!yo){
+    if(_miRegistro && !_reintentandoUnion){
+      _reintentandoUnion = true;
+      escribirAlumno(salaCode, miApodo, _miRegistro);
+      setTimeout(function(){ _reintentandoUnion = false; }, 4000);
+      cont.innerHTML = '<div class="avisos">Reconectando con la sala…</div>';
+      return;
+    }
     cont.innerHTML = '<div class="avisos">Te sacaron de la sala.<br><button class="btn btn-secundario" style="margin-top:14px" onclick="salirATodo()">Volver</button></div>';
     return;
   }
+  _reintentandoUnion = false;
   var firma = firmaAlumno(room);
   if(firma === _firmaAlumno){ return; }
   _firmaAlumno = firma;
@@ -1435,6 +2304,7 @@ function renderAlumnoSala(room){
         '<div class="numero">PREGUNTA ' + (room.preguntaActual + 1) + ' DE ' + room.quiz.preguntas.length + '</div>' +
         '<h2>' + esc(p.pregunta) + '</h2>' +
         '<div class="temporizador" id="tempAlumno">' + restantesSegAlumno(room) + '</div>' +
+        '<button class="btn-leer" onclick="leerEnVozAlta()">🔊 Escuchar la pregunta</button>' +
       '</div>' +
       '<div class="opciones">' + opciones + '</div>' +
       (respondio ? (restantesSegAlumno(room) > 0 ? '<div class="contador-resp">Puedes cambiar de respuesta tocando otra opción</div>' : '<div class="contador-resp">Respuesta enviada — espera al profe</div>') : '<div class="contador-resp">Toca la opción que creas correcta</div>');
@@ -1460,6 +2330,7 @@ function renderAlumnoSala(room){
         '<div style="font-size:14px;color:#b9bede">Tu total: <b style="color:#ffd166">' + (yo.total || 0) + '</b></div>' +
       '</div>' +
       '<div class="opciones">' + opciones + '</div>' +
+      bloqueExplicacion(q) +
       '<div class="avisos" style="font-size:14px">Esperando a que el profe continúe...</div>';
     _ultimoEstadoAlumno = "revelada";
     return;
@@ -1504,7 +2375,8 @@ function responder(opt){
   if(yo.rta === opt){ return; }
   yo.rta = opt;
   yo.tMs = Date.now() - room.inicioTs;
-  escribirRoom(room);
+  _rtaPendiente = { opt: opt, ts: Date.now() };
+  escribirAlumno(salaCode, miApodo, { rta: opt, tMs: yo.tMs, miTs: Date.now() });
   sonClick();
   renderAlumnoSala(room);
 }
