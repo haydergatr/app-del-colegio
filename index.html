@@ -14,7 +14,24 @@
     background:#0d0f1a;color:#fff;
     min-height:100vh;
     background-image:radial-gradient(circle at 15% 0%,#3b1a5e33 0,transparent 45%),radial-gradient(circle at 85% 100%,#1a2b5e44 0,transparent 45%);
+    -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
   }
+  #marca{
+    position:fixed;inset:0;z-index:9997;pointer-events:none;
+    display:flex;align-items:center;justify-content:center;
+    font-size:7vw;font-weight:900;color:#ffffff10;letter-spacing:2px;text-align:center;
+    transform:rotate(-18deg);line-height:1.8;word-break:break-word;overflow:hidden;
+  }
+  #marca .esquina{
+    position:fixed;top:8px;right:10px;font-size:11px;font-weight:700;color:#ffffff30;transform:none;
+  }
+  #avisoFuera{
+    position:fixed;left:10px;right:10px;bottom:12px;z-index:9999;
+    background:#ff2d55;color:#fff;font-weight:800;font-size:13px;text-align:center;
+    padding:10px 14px;border-radius:14px;box-shadow:0 8px 30px #ff2d5566;
+    animation:parpadeo 1s infinite;
+  }
+  @keyframes parpadeo{0%,100%{opacity:1}50%{opacity:.55}}
   .barra{
     display:flex;align-items:center;justify-content:space-between;
     padding:14px 18px;border-bottom:1px solid #ffffff14;
@@ -315,6 +332,81 @@ window.onerror = function(msg){
   try{ toastMsg("Error: " + String(msg).slice(0, 80)); }catch(e){}
   return false;
 };
+document.addEventListener("contextmenu", function(e){ e.preventDefault(); return false; });
+document.addEventListener("copy", function(e){ e.preventDefault(); return false; });
+document.addEventListener("cut", function(e){ e.preventDefault(); return false; });
+
+function ponerMarca(nombre){
+  var m = $("marca");
+  if(!m){
+    m = document.createElement("div");
+    m.id = "marca";
+    document.body.appendChild(m);
+  }
+  m.innerHTML = esc(nombre) + "<span class='esquina'>" + esc(nombre) + "</span>";
+  m.style.display = "flex";
+}
+function quitarMarca(){
+  var m = $("marca");
+  if(m){ m.style.display = "none"; }
+}
+
+function avisarFuera(fuera){
+  if(rolActual !== "alumno" || !salaCode || !miApodo) return;
+  var url = _baseFirebase + "rooms/" + salaCode + "/alumnos/" + encodeURIComponent(miApodo) + "/oi.json";
+  var cuerpo = fuera ? String((new Date()).getTime()) : "null";
+  try{
+    fetch(url, {method:"PUT", body:cuerpo, keepalive:true, headers:{"Content-Type":"application/json"}}).catch(function(){});
+  }catch(e){}
+}
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState === "hidden"){ avisarFuera(true); } else { avisarFuera(false); }
+});
+window.addEventListener("pagehide", function(){ avisarFuera(true); });
+
+var _fueraAvisados = {};
+var _fueraActual = [];
+function descartarAvisoFuera(){
+  if(!_fueraActual.length || !salaCode){ return; }
+  var lista = _fueraActual.slice();
+  for(var i = 0; i < lista.length; i++){
+    var u = _baseFirebase + "rooms/" + salaCode + "/alumnos/" + encodeURIComponent(lista[i]) + "/oi.json";
+    try{ fetch(u, {method:"PUT", body:"null", headers:{"Content-Type":"application/json"}}).catch(function(){}); }catch(e){}
+  }
+  _fueraActual = [];
+  var b = $("avisoFuera");
+  if(b){ b.style.display = "none"; }
+}
+setInterval(function(){
+  if(rolActual !== "profe" || !salaCode) return;
+  var room = leerRoom(salaCode);
+  if(!room || !room.alumnos) return;
+  var fuera = [];
+  for(var k in room.alumnos){
+    var al = room.alumnos[k];
+    if(al && al.oi){ fuera.push(k); }
+  }
+  _fueraActual = fuera;
+  var banner = $("avisoFuera");
+  if(fuera.length > 0){
+    if(!banner){
+      banner = document.createElement("div");
+      banner.id = "avisoFuera";
+      document.body.appendChild(banner);
+    }
+    banner.style.display = "block";
+    banner.innerHTML = "Atención: " + fuera.map(function(n){ return "<b>" + esc(n) + "</b>"; }).join(", ") + " salió del navegador. <span onclick='descartarAvisoFuera()' style='cursor:pointer;padding:0 8px;font-size:16px'>✕</span>";
+    for(var i = 0; i < fuera.length; i++){
+      var n = fuera[i];
+      var clave = n + "_" + room.alumnos[n].oi;
+      if(_fueraAvisados[clave]) continue;
+      _fueraAvisados[clave] = true;
+      toastMsg("Aviso: " + n + " salió del navegador");
+    }
+  } else if(banner){
+    banner.style.display = "none";
+  }
+}, 1000);
 var COLORES_AVATAR = ["#ff4d8d","#a55bff","#3dff8b","#ffd166","#4da6ff","#ff8a4d","#ff4d4d","#8affc1"];
 var _ultimoEstadoAlumno = null;
 var _ultimoTick = -1;
@@ -355,6 +447,7 @@ function salirATodo(){
   _firmaAlumno = null;
   _firmaProfe = null;
   salaCode = null; miApodo = null; rolActual = null;
+  quitarMarca();
   activar("pantallaInicio");
 }
 
@@ -1288,6 +1381,7 @@ function unirseSala(){
     room.alumnos[apodo] = { color: miColor, total: 0, aciertos: 0, rta: null, tMs: 0, ganado: 0 };
     escribirRoom(room);
     miApodo = apodo;
+    ponerMarca(miApodo);
     guardarPerfil({ apodo: apodo, color: miColor });
     salaCode = codigo;
     _ultimoEstadoAlumno = null;
