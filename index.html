@@ -317,6 +317,9 @@ var _ultimoEstadoAlumno = null;
 var _ultimoTick = -1;
 var _firmaAlumno = null;
 var _firmaProfe = null;
+var _vistaQ = null;
+var _vistaTs = 0;
+var _autoRvelado = null;
 
 function irARol(rol){
   rolActual = rol;
@@ -1317,6 +1320,8 @@ function renderAlumnoSala(room){
   }
   if(room.estado === "pregunta"){
     var p = preguntaActual(room);
+    var claveQ = room.preguntaActual + "|" + room.inicioTs;
+    if(claveQ !== _vistaQ){ _vistaQ = claveQ; _vistaTs = Date.now(); }
     var respondio = yo.rta !== null && yo.rta !== undefined;
     var opciones = "";
     p.opciones.forEach(function(op, i){
@@ -1332,7 +1337,7 @@ function renderAlumnoSala(room){
       '<div class="tarjeta-pregunta">' +
         '<div class="numero">PREGUNTA ' + (room.preguntaActual + 1) + ' DE ' + room.quiz.preguntas.length + '</div>' +
         '<h2>' + esc(p.pregunta) + '</h2>' +
-        '<div class="temporizador" id="tempAlumno">' + restantesSeg(room) + '</div>' +
+        '<div class="temporizador" id="tempAlumno">' + restantesSegAlumno(room) + '</div>' +
       '</div>' +
       '<div class="opciones">' + opciones + '</div>' +
       (respondio ? '<div class="contador-resp">Respuesta enviada — espera al profe</div>' : '<div class="contador-resp">Toca la opción que creas correcta</div>');
@@ -1399,10 +1404,6 @@ function responder(opt){
   var yo = room.alumnos[miApodo];
   if(!yo) return;
   if(yo.rta !== null && yo.rta !== undefined) return;
-  if(Date.now() - room.inicioTs > preguntaActual(room).seg * 1000){
-    toastMsg("Se acabó el tiempo");
-    return;
-  }
   yo.rta = opt;
   yo.tMs = Date.now() - room.inicioTs;
   escribirRoom(room);
@@ -1416,18 +1417,27 @@ function restantesSeg(room){
   var fin = room.inicioTs + p.seg * 1000;
   return Math.max(0, Math.ceil((fin - Date.now()) / 1000));
 }
+function restantesSegAlumno(room){
+  if(room.estado !== "pregunta") return 0;
+  var p = preguntaActual(room);
+  return Math.max(0, Math.ceil(p.seg - (Date.now() - _vistaTs) / 1000));
+}
 
 setInterval(function(){
   var room = null;
   if(salaCode){ room = leerRoom(salaCode); }
   if(!room || room.estado !== "pregunta"){ _ultimoTick = -1; return; }
   var p = preguntaActual(room);
-  var segRest = restantesSeg(room);
   var profesor = rolActual === "profe";
+  var segRest = profesor ? restantesSeg(room) : restantesSegAlumno(room);
   var el = profesor ? $("tempProfe") : $("tempAlumno");
   if(el){
     el.textContent = segRest;
     el.classList.toggle("bajo", segRest <= p.seg * 0.3);
+  }
+  if(profesor && segRest <= 0){
+    var claveQ = room.preguntaActual + "|" + room.inicioTs;
+    if(claveQ !== _autoRvelado){ _autoRvelado = claveQ; revelarPregunta(); }
   }
   if(!profesor){
     var yo = room.alumnos[miApodo];
