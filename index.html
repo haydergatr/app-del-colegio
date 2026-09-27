@@ -289,7 +289,7 @@
     <div class="paleta" id="selectorColor"></div>
     <div class="base-avatar"><div class="avatar-grande" id="vistaAvatar" style="background:#a55bff">A</div></div>
   </div>
-  <button class="btn btn-primario" onclick="unirseSala()">Entrar a la sala</button>
+  <button id="btnEntrar" class="btn btn-primario" onclick="unirseSala()">Entrar a la sala</button>
   <button class="btn btn-secundario" style="margin-top:10px" onclick="salirATodo()">Volver</button>
 </div>
 
@@ -308,6 +308,10 @@ var escuchasActivas = [];
 var _cacheRoom = {};
 var _baseFirebase = "https://app-para-colegios-1f026-default-rtdb.firebaseio.com/";
 function urlRoom(codigo){ return _baseFirebase + "rooms/" + codigo + ".json"; }
+window.onerror = function(msg){
+  try{ toastMsg("Error: " + String(msg).slice(0, 80)); }catch(e){}
+  return false;
+};
 var COLORES_AVATAR = ["#ff4d8d","#a55bff","#3dff8b","#ffd166","#4da6ff","#ff8a4d","#ff4d4d","#8affc1"];
 var _ultimoEstadoAlumno = null;
 var _ultimoTick = -1;
@@ -1226,8 +1230,11 @@ function unirseSala(){
   var apodo = ($("alumnoApodo").value || "").trim();
   if(!/^\d{4}$/.test(codigo)){ toastMsg("El código son 4 números."); return; }
   if(apodo.length < 2){ toastMsg("Escribe tu apodo."); return; }
+  var btn = $("btnEntrar");
+  if(btn){ btn.disabled = true; btn.textContent = "Buscando..."; }
   obtenerSala(codigo, function(room){
-    if(!room){ toastMsg("Esa sala no existe."); return; }
+    if(btn){ btn.disabled = false; btn.textContent = "Entrar a la sala"; }
+    if(!room){ toastMsg("No encuentro la sala " + codigo + ". ¿La abrió el profe hace un momento?"); return; }
     if(room.estado === "fin"){ toastMsg("Ese quiz ya terminó."); return; }
     if(room.alumnos[apodo]){ toastMsg("Ese apodo ya está en la sala."); return; }
     if(Object.keys(room.alumnos).length >= 60){ toastMsg("La sala está llena."); return; }
@@ -1239,6 +1246,7 @@ function unirseSala(){
     _ultimoEstadoAlumno = null;
     limpiarEscuchas();
     activar("pantallaAlumnoSala");
+    renderAlumnoSala(room);
     escucharSala(function(room){ renderAlumnoSala(room); });
   });
 }
