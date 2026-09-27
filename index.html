@@ -866,9 +866,24 @@ function volverChat(){
 /* ---------- SALA EN VIVO (modo demo con 2 pestañas) ---------- */
 function claveRoom(codigo){ return "ce_room_" + codigo; }
 
+function normalizarRoom(sala){
+  if(!sala || typeof sala !== "object" || Array.isArray(sala)) return null;
+  if(!sala.alumnos || typeof sala.alumnos !== "object" || Array.isArray(sala.alumnos)) sala.alumnos = {};
+  if(!sala.stats || !Array.isArray(sala.stats)) sala.stats = [];
+  if(sala.estado !== "pregunta" && sala.estado !== "revelada" && sala.estado !== "fin" && sala.estado !== "espera") sala.estado = "espera";
+  if(typeof sala.preguntaActual !== "number") sala.preguntaActual = -1;
+  if(!Array.isArray(sala.orden)) sala.orden = [];
+  if(!sala.codigo) sala.codigo = "0000";
+  if(!sala.quiz || typeof sala.quiz !== "object") sala.quiz = null;
+  return sala;
+}
+
 function leerRoom(codigo){
-  if(_cacheRoom[codigo] !== undefined) return _cacheRoom[codigo];
-  try{ var v = localStorage.getItem(claveRoom(codigo)); if(v){ var o = JSON.parse(v); _cacheRoom[codigo] = o; return o; } }
+  if(_cacheRoom[codigo] !== undefined){
+    _cacheRoom[codigo] = normalizarRoom(_cacheRoom[codigo]);
+    return _cacheRoom[codigo];
+  }
+  try{ var v = localStorage.getItem(claveRoom(codigo)); if(v){ var o = normalizarRoom(JSON.parse(v)); _cacheRoom[codigo] = o; return o; } }
   catch(e){}
   return null;
 }
@@ -895,6 +910,7 @@ function buscarRoom(codigo, cb, intento){
     fetch(urlRoom(codigo), { cache: "no-store" })
       .then(function(x){ return x.json(); })
       .then(function(room){
+        room = normalizarRoom(room);
         if(room){ _cacheRoom[codigo] = room; cb(room); return; }
         if(intento < 4){ setTimeout(function(){ buscarRoom(codigo, cb, intento + 1); }, 700); }
         else { cb(leerRoom(codigo)); }
@@ -933,6 +949,7 @@ function escucharSala(cb){
   var iv = setInterval(function(){
     try{
       fetch(urlRoom(salaCode), { cache: "no-store" }).then(function(x){ return x.json(); }).then(function(room){
+        room = normalizarRoom(room);
         if(room){ _cacheRoom[salaCode] = room; cb(room); }
       }).catch(function(){
         var r = leerRoom(salaCode);
