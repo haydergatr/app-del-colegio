@@ -305,7 +305,6 @@ var miColor = "#a55bff";
 var salaCode = null;
 var quizEditando = null;
 var escuchasActivas = [];
-var _usaServidor = false;
 var _cacheRoom = {};
 var _baseFirebase = "https://app-para-colegios-1f026-default-rtdb.firebaseio.com/";
 function urlRoom(codigo){ return _baseFirebase + "rooms/" + codigo + ".json"; }
@@ -872,21 +871,35 @@ function leerRoom(codigo){
 function escribirRoom(room){
   _cacheRoom[room.codigo] = room;
   try{ localStorage.setItem(claveRoom(room.codigo), JSON.stringify(room)); }catch(e){}
-  if(_usaServidor){
-    try{
-      fetch(urlRoom(room.codigo), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(room) });
-    }catch(e){}
-  }
+  subirRoom(room.codigo, 0);
+}
+function subirRoom(codigo, intento){
+  var room = _cacheRoom[codigo];
+  if(!room){ return; }
+  try{
+    fetch(urlRoom(codigo), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(room) })
+      .catch(function(){ if(intento < 4){ setTimeout(function(){ subirRoom(codigo, intento + 1); }, 1000 * (intento + 1)); } });
+  }catch(e){}
 }
 function obtenerSala(codigo, cb){
   var r = leerRoom(codigo);
   if(r){ cb(r); return; }
-  if(_usaServidor){
-    fetch(urlRoom(codigo), { cache: "no-store" }).then(function(x){ return x.json(); }).then(function(room){
-      if(room){ _cacheRoom[codigo] = room; }
-      cb(room);
-    }).catch(function(){ cb(null); });
-  } else { cb(r); }
+  buscarRoom(codigo, cb, 0);
+}
+function buscarRoom(codigo, cb, intento){
+  try{
+    fetch(urlRoom(codigo), { cache: "no-store" })
+      .then(function(x){ return x.json(); })
+      .then(function(room){
+        if(room){ _cacheRoom[codigo] = room; cb(room); return; }
+        if(intento < 4){ setTimeout(function(){ buscarRoom(codigo, cb, intento + 1); }, 700); }
+        else { cb(leerRoom(codigo)); }
+      })
+      .catch(function(){
+        if(intento < 4){ setTimeout(function(){ buscarRoom(codigo, cb, intento + 1); }, 700); }
+        else { cb(leerRoom(codigo)); }
+      });
+  }catch(e){ cb(leerRoom(codigo)); }
 }
 
 function roomVacia(){
@@ -914,13 +927,16 @@ function escucharSala(cb){
     }
   };
   var iv = setInterval(function(){
-    if(_usaServidor){
+    try{
       fetch(urlRoom(salaCode), { cache: "no-store" }).then(function(x){ return x.json(); }).then(function(room){
         if(room){ _cacheRoom[salaCode] = room; cb(room); }
-      }).catch(function(){});
-    } else {
-      var room = leerRoom(salaCode);
-      if(room){ cb(room); }
+      }).catch(function(){
+        var r = leerRoom(salaCode);
+        if(r){ cb(r); }
+      });
+    }catch(e){
+      var r = leerRoom(salaCode);
+      if(r){ cb(r); }
     }
   }, 800);
   window.addEventListener("storage", onStorage);
@@ -1375,8 +1391,6 @@ setInterval(function(){
 }, 200);
 
 $("alumnoApodo").addEventListener("input", actualizarVistaAvatar);
-
-fetch(_baseFirebase + ".json", { cache: "no-store" }).then(function(r){ if(r.ok){ _usaServidor = true; } }).catch(function(){});
 </script>
 </body>
 </html>
