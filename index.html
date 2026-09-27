@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Clase Épica — La clase que todos quieren jugar</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -1340,7 +1343,7 @@ function renderAlumnoSala(room){
         '<div class="temporizador" id="tempAlumno">' + restantesSegAlumno(room) + '</div>' +
       '</div>' +
       '<div class="opciones">' + opciones + '</div>' +
-      (respondio ? '<div class="contador-resp">Respuesta enviada — espera al profe</div>' : '<div class="contador-resp">Toca la opción que creas correcta</div>');
+      (respondio ? (restantesSegAlumno(room) > 0 ? '<div class="contador-resp">Puedes cambiar de respuesta tocando otra opción</div>' : '<div class="contador-resp">Respuesta enviada — espera al profe</div>') : '<div class="contador-resp">Toca la opción que creas correcta</div>');
     _ultimoEstadoAlumno = "pregunta";
     return;
   }
@@ -1403,7 +1406,8 @@ function responder(opt){
   if(!room || room.estado !== "pregunta") return;
   var yo = room.alumnos[miApodo];
   if(!yo) return;
-  if(yo.rta !== null && yo.rta !== undefined) return;
+  if(restantesSegAlumno(room) <= 0){ return; }
+  if(yo.rta === opt){ return; }
   yo.rta = opt;
   yo.tMs = Date.now() - room.inicioTs;
   escribirRoom(room);
