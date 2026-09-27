@@ -956,6 +956,7 @@ function comenzarQuiz(i){
   escribirRoom(room);
   $("profeSalaTitulo").textContent = quiz.nombre;
   activar("pantallaProfeSala");
+  renderProfeSala(leerRoom(codigo));
   escucharSala(function(room){ renderProfeSala(room); });
 }
 
