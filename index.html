@@ -315,6 +315,8 @@ window.onerror = function(msg){
 var COLORES_AVATAR = ["#ff4d8d","#a55bff","#3dff8b","#ffd166","#4da6ff","#ff8a4d","#ff4d4d","#8affc1"];
 var _ultimoEstadoAlumno = null;
 var _ultimoTick = -1;
+var _firmaAlumno = null;
+var _firmaProfe = null;
 
 function irARol(rol){
   rolActual = rol;
@@ -344,6 +346,8 @@ function salirATodo(){
   limpiarEscuchas();
   if(salaCode){ borrarRoomDemo(salaCode); }
   _ultimoEstadoAlumno = null;
+  _firmaAlumno = null;
+  _firmaProfe = null;
   salaCode = null; miApodo = null; rolActual = null;
   activar("pantallaInicio");
 }
@@ -993,11 +997,30 @@ function comenzarQuiz(i){
   escribirRoom(room);
   $("profeSalaTitulo").textContent = quiz.nombre;
   activar("pantallaProfeSala");
+  _firmaProfe = null;
   renderProfeSala(leerRoom(codigo));
   escucharSala(function(room){ renderProfeSala(room); });
 }
 
+function firmaProfe(room){
+  var n = 0; var nAns = 0;
+  Object.keys(room.alumnos || {}).forEach(function(nombre){
+    var a = room.alumnos[nombre]; n++;
+    if(a && a.rta !== null && a.rta !== undefined) nAns++;
+  });
+  return room.estado + "|" + room.preguntaActual + "|" + room.inicioTs + "|" + n + "|" + nAns + "|" + (room.stats ? room.stats.length : 0);
+}
+function firmaAlumno(room){
+  var yo = room.alumnos[miApodo] || {};
+  return room.estado + "|" + room.preguntaActual + "|" + room.inicioTs + "|" +
+    (yo.rta === null || yo.rta === undefined ? "n" : yo.rta) + "|" + (yo.total || 0) + "|" + (yo.ganado || 0) + "|" + Object.keys(room.alumnos).length;
+}
+
 function renderProfeSala(room){
+  room = normalizarRoom(room);
+  var firma = firmaProfe(room);
+  if(firma === _firmaProfe){ return; }
+  _firmaProfe = firma;
   var cont = $("profeSalaContenido");
   if(room.estado === "espera"){
     var n = Object.keys(room.alumnos).length;
@@ -1235,6 +1258,7 @@ function rejugarQuiz(){
 function cerrarSalaProfe(){
   borrarRoomDemo(salaCode);
   limpiarEscuchas();
+  _firmaProfe = null;
   salaCode = null;
   activar("pantallaProfeHome");
   renderListaQuizzes();
@@ -1261,6 +1285,7 @@ function unirseSala(){
     guardarPerfil({ apodo: apodo, color: miColor });
     salaCode = codigo;
     _ultimoEstadoAlumno = null;
+    _firmaAlumno = null;
     limpiarEscuchas();
     activar("pantallaAlumnoSala");
     renderAlumnoSala(room);
@@ -1269,12 +1294,16 @@ function unirseSala(){
 }
 
 function renderAlumnoSala(room){
+  room = normalizarRoom(room);
   var cont = $("alumnoSalaContenido");
   var yo = room.alumnos[miApodo];
   if(!yo){
     cont.innerHTML = '<div class="avisos">Te sacaron de la sala.<br><button class="btn btn-secundario" style="margin-top:14px" onclick="salirATodo()">Volver</button></div>';
     return;
   }
+  var firma = firmaAlumno(room);
+  if(firma === _firmaAlumno){ return; }
+  _firmaAlumno = firma;
   if(room.estado === "espera"){
     var n = Object.keys(room.alumnos).length;
     cont.innerHTML = '' +
